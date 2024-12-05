@@ -11,6 +11,6 @@ class Villager extends Wall {
             talking: false,
             pos: pos,
         }
-        this.area = new InteractArea(pos, vec2(1.5,1.5), this.villager_info, "talking_area");
+        this.area = new InteractArea(pos, vec2(2.5,2.5), this.villager_info, "talking_area");
     }
 }

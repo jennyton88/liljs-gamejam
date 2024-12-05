@@ -57,7 +57,7 @@ class Player extends EngineObject {
             return false;
         }
 
-        if (keyIsDown('Enter')) {
+        if (keyWasPressed('Enter')) {
             if (obj.type == "home") {
                  //     this.enterHouse(obj);
             }
@@ -67,9 +67,20 @@ class Player extends EngineObject {
     }
 
     interact() {
-        if (keyIsDown('Enter')) {
-            this.talking = true;
-            this.talk(this.found_info.name, this.found_info.talk_type, this.found_info.lines);
+        if (keyWasPressed('Enter')) {
+            if (this.current_convo !== "") {
+                let movedText = this.current_convo.moveText();
+                if (!movedText) {
+                    this.current_convo.destroy();
+                    this.current_convo = "";
+                    this.found_info = "";
+                    this.talking = false;
+                }
+            }
+            else {
+                this.talking = true;
+                this.talk(this.found_info.name, this.found_info.talk_type, this.found_info.lines);
+            }
         }
     }
 
