@@ -6,7 +6,7 @@ class Villager extends Wall {
 
         this.villager_info = {
             name: name,
-            talk_type: "test",
+            talk_type: "0",
             lines: text,
             talking: false,
             pos: pos,

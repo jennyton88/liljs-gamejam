@@ -13,8 +13,8 @@ function gameInit()
 {
     // called once after the engine starts up
     // setup the game
-    player = new Player(vec2(5,1), vec2(0.95, 0.95));
-    new Home(vec2(5,5), vec2(3,3), "Bob", -1, -1, -1, -1, -1);
+    player = new Player(vec2(5,1), vec2(0.95, 0.95), "Not_Bob"); // same name villager check
+    new Home(vec2(5,5), vec2(3,3), "Bob", -1, -1, -1, -1);
     new Villager(vec2(1,1), vec2(0.95, 0.95), "Bob", ["hello!", "bye!"]);
 }
 
@@ -23,7 +23,7 @@ function gameUpdate()
 {
     // called every frame at 60 frames per second
     // handle input and update the game state
-    if (!player.talking) {
+    if (!player.talking || !player.pause) {
         player.move();
     }
 

@@ -2,15 +2,22 @@
 
 class Player extends EngineObject {
 
-    constructor(pos, size=vec2(0.95,0.95)) {
+    constructor(pos, size=vec2(0.95,0.95), name) {
         super(pos, size);
 
         this.setCollision();
         this.damping = 0.95;
         this.talking = false;
         this.current_convo = "";
-        this.in_talking_area = false;
         this.found_info = "";
+        this.name = name;
+        this.talked_with = {
+            // Get villager names "Bob": 2 times today, get convos
+            // introduced : true/ false or -1 on the talked with. reset to 0 when introduced and new day starts if haven't introduced and day resets, stay at -1
+        };
+        this.friendship_level = {
+            // villager: lvl
+        };
     }
 
     move() {
@@ -53,15 +60,21 @@ class Player extends EngineObject {
                 }
                 
             }
+            else if (obj.subtype == "entering_area") {
+                if (this.velocity.direction() == 0) { // TODO fix this
+                    this.in_interact_area = true;
+                    this.found_info = obj.info;
+                }
+                else {
+                    this.in_interact_area = false;
+                    this.found_info = "";
+                }
+            }
 
             return false;
         }
 
-        if (keyWasPressed('Enter')) {
-            if (obj.type == "home") {
-                 //     this.enterHouse(obj);
-            }
-        }
+
 
         return true;
     }
@@ -79,18 +92,19 @@ class Player extends EngineObject {
             }
             else {
                 this.talking = true;
-                this.talk(this.found_info.name, this.found_info.talk_type, this.found_info.lines);
+                this.talk(this.found_info.name, this.found_info.talk_type);
             }
         }
     }
 
-    // enterHouse(obj) {
-    //     if (!obj.locked && keyIsDown('Enter')) {
-    //         moveToHouse(obj.name, obj);
-    //     }
-    // }
+    enterHouse(obj) {
+        if (!obj.locked && keyIsDown('Enter')) {
+            moveToHouse(obj.name, obj);
+        }
+    }
 
-    talk(name, talk_type, lines) {
-        this.current_convo = new Conversation(name, talk_type, lines);
+    talk(villager_name, talk_type) {
+        let convo = villager_convos[villager_name + "_" + talk_type];
+        this.current_convo = new Conversation(this.name, villager_name, talk_type, convo);
     }
 }
