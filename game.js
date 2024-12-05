@@ -14,9 +14,8 @@ function gameInit()
     // called once after the engine starts up
     // setup the game
     player = new Player(vec2(5,1), vec2(0.95, 0.95));
-    new Wall(vec2(1,1), vec2(3,1));
-    new Wall(vec2(3,2), vec2(1,3));
-    new Wall(vec2(1,3), vec2(1,1));
+    new Home(vec2(5,5), vec2(3,3), "Bob", -1, -1, -1, -1, -1);
+    new Villager(vec2(1,1), vec2(0.95, 0.95), "Bob", ["hello!", "bye!"]);
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -24,8 +23,13 @@ function gameUpdate()
 {
     // called every frame at 60 frames per second
     // handle input and update the game state
+    if (!player.talking) {
+        player.move();
+    }
 
-    player.move();
+    if (player.in_interact_area) {
+        player.interact();
+    }
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -47,6 +51,10 @@ function gameRenderPost()
 {
     // called after objects are rendered
     // draw effects or hud that appear above all objects
+    if (player.talking) {
+        player.current_convo.displayText();
+    }
+
 }
 
 ///////////////////////////////////////////////////////////////////////////////
