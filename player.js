@@ -109,18 +109,25 @@ class Player extends EngineObject {
     enterArea() {
         if (!this.found_info.locked) {
             this.teleport(this.found_info.home_pos); // consider where to start
+            this.in_interact_area = false;
+            this.found_info = "";
+            this.in_area = "";
         }
     }
 
     teleport(pos) {
         // this.pause = true;
         this.velocity = vec2(0,0);
-        this.pos = pos;
+        this.pos = vec2(pos.x, pos.y);
         // this interact area = false
     }
 
     talk(villager_name, talk_type) {
         let convo = villager_convos[villager_name + "_" + talk_type];
         this.current_convo = new Conversation(this.name, villager_name, talk_type, convo);
+    }
+
+    moveCamera() {
+        setCameraPos(this.pos);
     }
 }
