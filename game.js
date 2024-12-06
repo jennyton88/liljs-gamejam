@@ -7,16 +7,19 @@
 'use strict';
 
 let player;
+let interactables = [];
 
 ///////////////////////////////////////////////////////////////////////////////
 function gameInit()
 {
     // called once after the engine starts up
     // setup the game
+    let villager = new Villager(vec2(1,1), vec2(0.95, 0.95), "Bob");
+    let home = new Home(vec2(5,5), vec2(3,3), "Bob", -1, -1, -1, -1);
+    interactables.push(villager, home);
+
     player = new Player(vec2(5,1), vec2(0.95, 0.95), "Not_Bob"); // same name villager check
     player.moveCamera();
-    new Home(vec2(5,5), vec2(3,3), "Bob", -1, -1, -1, -1);
-    new Villager(vec2(1,1), vec2(0.95, 0.95), "Bob", ["hello!", "bye!"]);
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -29,7 +32,7 @@ function gameUpdate()
     }
 
     if (player.in_interact_area) {
-        player.interact();
+        player.interact(interactables);
     }
 }
 
@@ -61,4 +64,4 @@ function gameRenderPost()
 
 ///////////////////////////////////////////////////////////////////////////////
 // Startup LittleJS Engine
-engineInit(gameInit, gameUpdate, gameUpdatePost, gameRender, gameRenderPost, ['tiles.png']);
+engineInit(gameInit, gameUpdate, gameUpdatePost, gameRender, gameRenderPost, ['animaltilesheet.png']);

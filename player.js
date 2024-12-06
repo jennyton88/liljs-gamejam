@@ -10,6 +10,7 @@ class Player extends EngineObject {
         this.talking = false;
         this.current_convo = "";
         this.in_interact_area = false;
+        this.in_area = "";
         this.found_info = "";
         this.name = name;
         this.pause = false;
@@ -20,6 +21,11 @@ class Player extends EngineObject {
         this.friendship_level = {
             // villager: lvl
         };
+
+        this.tileInfo = tile(64);
+        this.tileInfoHead = tile(128);
+        this.tileInfoEars = tile(68);
+        this.last_dir = this.pos.add(vec2(this.velocity.x,this.velocity.y).normalize(2));
     }
 
     move() {
@@ -44,6 +50,10 @@ class Player extends EngineObject {
         }
 
         this.velocity = vec2(vx * this.damping, vy * this.damping);
+
+        if (keyIsDown('ArrowUp') || keyIsDown('ArrowRight') || keyIsDown('ArrowDown')|| keyIsDown('ArrowLeft')) {
+            this.last_dir = this.pos.add(this.velocity.normalize(2));
+        }
     }
 
     collideWithObject(obj) {
@@ -51,57 +61,65 @@ class Player extends EngineObject {
             this.velocity = vec2(0,0);
         }
         else {
-            if (obj.subtype == "talking_area") {
-                if (this.velocity.direction() == 0) { // TODO fix this
-                    this.in_interact_area = true;
-                    this.found_info = obj.info;
-                    this.in_area = obj.subtype;
-                }
-                else {
-                    this.in_interact_area = false;
-                    this.found_info = "";
-                    this.in_area = "";
-                }
-                
-            }
-            else if (obj.subtype == "entering_area") {
-                if (this.velocity.direction() == 0) { // TODO fix this
-                    this.in_interact_area = true;
-                    this.found_info = obj.info;
-                    this.in_area = obj.subtype;
-                }
-                else {
-                    this.in_interact_area = false;
-                    this.found_info = "";
-                    this.in_area = "";
-                }
-            }
-
+            this.in_interact_area = true;
+            this.in_area = obj.subtype;
             return false;
         }
 
         return true;
     }
 
-    interact() {
-        if (keyWasPressed('Enter')) {
+    interact(interactables) {
+        let objects = engineObjectsRaycast(this.pos, this.last_dir, interactables);
+        if (objects.length !== 0) {
             if (this.in_area == "talking_area") {
-                if (this.current_convo !== "") {
-                    let movedText = this.current_convo.moveText();
-                    if (!movedText) {
-                        this.current_convo.destroy();
-                        this.current_convo = "";
-                        this.found_info = "";
-                        this.talking = false;
+                for(let i = 0; i < objects.length; i++) {
+                    if (objects[i].type == "villager") {
+                        this.found_info = objects[i].info;
+                        break;
                     }
-                }
-                else {
-                    this.talking = true;
-                    this.talk(this.found_info.name, this.found_info.talk_type);
                 }
             }
             else if (this.in_area == "entering_area") {
-                this.enterArea();
+                for(let i = 0; i < objects.length; i++) {
+                    if (objects[i].type == "home") {
+                        this.found_info = objects[i].info;
+                        break;
+                    }
+                }
+            }
+            else {
+                this.found_info = "";
+                this.in_interact_area = false;
+                this.in_area = "";
+            }
+        }
+        else {
+            this.found_info = "";
+            this.in_interact_area = false;
+            this.in_area = "";
+        }
+
+        if (keyWasPressed('Enter')) {
+            if (this.found_info !== "") {
+                if (this.in_area == "talking_area" && this.found_info.type == "villager") {
+                    if (this.current_convo !== "") {
+                        let movedText = this.current_convo.moveText();
+                        if (!movedText) {
+                            this.current_convo = this.current_convo.destroy();
+                            this.current_convo = "";
+                            this.found_info = "";
+                            this.talking = false;
+                        }
+                    }
+                    else {
+                        this.talking = true;
+                        this.talk(this.found_info.name, this.found_info.talk_type);
+                    }
+                }
+                else if (this.in_area == "entering_area" && this.found_info.type == "home") {
+                    this.enterArea();
+                }
             }
         }
     }
@@ -130,4 +148,11 @@ class Player extends EngineObject {
     moveCamera() {
         setCameraPos(this.pos);
     }
+
+    render(){ 
+        drawTile(vec2(this.pos.x,this.pos.y),vec2(0.95, 0.95),this.tileInfo);
+        drawTile(vec2(this.pos.x,this.pos.y - 0.8),vec2(0.95,0.95),this.tileInfoHead);
+        drawTile(vec2(this.pos.x, this.pos.y + 0.6), vec2(0.95,0.95), this.tileInfoEars);
+    }
+
 }

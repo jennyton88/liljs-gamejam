@@ -4,7 +4,7 @@ class Home extends Wall {
     constructor(pos, size, owner, furniture_data, floor_plan, outside_floor_plan, exterior, home_pos=vec2(-20,-20)) {
         super(pos, size, "home");
 
-        this.home_info = {
+        this.info = {
             owner: owner,
             locked: false, // remember to unlock lock this please
             furniture_data: furniture_data,
@@ -12,15 +12,16 @@ class Home extends Wall {
             outside_floor_plan: outside_floor_plan,
             exterior: exterior,
             home_pos: home_pos,
+            type: "home",
         }
-        this.area = new InteractArea(vec2(pos.x, pos.y - 2), vec2(1,1), this.home_info, "entering_area");
+        this.area = new InteractArea(vec2(pos.x, pos.y - 2), vec2(1,1), "entering_area");
     }
 
     unlockHome() {
-        this.home_info.locked = false;
+        this.info.locked = false;
     }
 
     lockHome() {
-        this.home_info.locked = true;
+        this.info.locked = true;
     }
 }
