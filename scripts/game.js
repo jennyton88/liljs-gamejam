@@ -15,6 +15,7 @@ const tile_type = {
 
 
 let layers = [];
+let villagers = {};
 
 function createLevel() {
     const maps_start = 1;
@@ -53,6 +54,7 @@ function createLevel() {
                 tile_layer.setData(pos, data);
             }
         }
+        
         tile_layer.redraw();
         layers.push(tile_layer);
     }
@@ -73,6 +75,7 @@ function gameInit()
     let villager = new Villager(vec2(10,18), vec2(0.90, 0.90), "Bob");
     let home = new Home(vec2(20,20), vec2(3,3), "Bob", -1, -1, -1, -1);
     interactables.push(villager, home);
+    villagers[villager.getName()] = villager;
 
     player = new Player(vec2(16, 18), vec2(0.95, 0.95), "Not_Bob");
     player.moveCamera();

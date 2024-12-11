@@ -1,5 +1,6 @@
 'use strict';
 
+
 class Conversation {
     constructor(player_name, villager_name, type, lines) {
         this.player_name = player_name;
@@ -11,10 +12,10 @@ class Conversation {
 
     displayText() {
         drawRect(vec2(cameraPos.x, cameraPos.y - 3), vec2(10,2), new Color(0,0,0,1));
-        drawText(this.villager_name, vec2(cameraPos.x - 4, cameraPos.y - 2.6), 0.6);
+        drawText(this.villager_name, vec2(cameraPos.x - 4.3, cameraPos.y - 2.35), 0.6);
         let line = this.lines[this.counter];
         line = line.replace("{name}", this.player_name);
-        drawText(line, vec2(cameraPos.x, cameraPos.y - 3), 0.5);
+        drawText(line, vec2(cameraPos.x, cameraPos.y - 3), 0.4, new Color(1,1,1,1), 0, new Color(1,1,1,1), 'center');
     }
 
 

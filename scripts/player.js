@@ -15,11 +15,15 @@ class Player extends EngineObject {
         this.name = name;
         this.pause = false;
         this.talked_with = {
+
+        };
             // Get villager names "Bob": 2 times today, get convos
             // introduced : true/ false or -1 on the talked with. reset to 0 when introduced and new day starts if haven't introduced and day resets, stay at -1
-        };
         this.friendship_level = {
             // villager: lvl
+        };
+        this.met = {
+
         };
 
         this.tileInfo = tile(29);
@@ -141,7 +145,29 @@ class Player extends EngineObject {
     }
 
     talk(villager_name, talk_type) {
-        let convo = villager_convos[villager_name + "_" + talk_type];
+        let t_type = talk_type;
+        console.log(t_type)
+        let convo = "";
+        if (this.met[villager_name] == undefined) {
+            this.met[villager_name] = true;
+            this.talked_with[villager_name] = 0;
+            this.friendship_level[villager_name] = 0;
+            t_type = "intro";
+        }
+        else if (this.met[villager_name]) {
+            this.talked_with[villager_name]++;
+            let talk = this.talked_with[villager_name];
+            if (villager_convos[villager_name + "_" + talk] == undefined) {
+                villagers[villager_name].info.talk_type = 0;
+                this.talked_with[villager_name] = 0;
+            }
+            else {
+                villagers[villager_name].info.talk_type = talk;
+                this.talked_with[villager_name] = talk;
+            }
+        }
+// set villager talk type
+        convo = villager_convos[villager_name + "_" + t_type];
         this.current_convo = new Conversation(this.name, villager_name, talk_type, convo);
     }
 
@@ -150,8 +176,14 @@ class Player extends EngineObject {
     }
 
     render(){ 
+        
         drawTile(vec2(this.pos.x, this.pos.y),vec2(0.95, 0.95),this.tileInfo);
-        drawTile(vec2(this.pos.x - 0.08,this.pos.y + 0.4),vec2(0.95,0.95),this.tileInfoHead);
+        drawTile(vec2(this.pos.x,this.pos.y + 0.4),vec2(0.95,0.95),this.tileInfoHead);
+        if (this.in_interact_area) {
+            drawRect(vec2(this.pos.x - 0.1, this.pos.y + 1.14), vec2(0.4,0.5), new Color(0,0,0,1));
+            drawText("?", vec2(this.pos.x - 0.1, this.pos.y + 1.1), 0.5);
+        }
     }
+
 
 }
