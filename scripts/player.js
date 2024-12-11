@@ -28,9 +28,13 @@ class Player extends EngineObject {
 
         this.tileInfo = tile(29);
         this.tileInfoHead = tile(18);
+        this.tileInfoHeadRight = tile(9);
+        this.tileInfoHeadTurn = tile(19);
+        this.tileInfoHeadBack = tile(7);
+        this.tileInfoHeadTurnUp = tile(10);
         
         this.last_dir = this.pos.add(this.velocity.normalize(2));
-        
+        this.dir = "down";
     }
 
     move() {
@@ -40,24 +44,41 @@ class Player extends EngineObject {
 
         if (keyIsDown('ArrowUp')) {
             vy = speed;
+            this.dir = "up";
         }
 
         if (keyIsDown('ArrowRight')) {
             vx = speed;
+            this.dir = "right";
         }
 
         if (keyIsDown('ArrowDown')) {
             vy = -speed;
+            this.dir = "down";
         }
 
         if (keyIsDown('ArrowLeft')) {
             vx = -speed;
+            this.dir = "left";
         }
 
         this.velocity = vec2(vx * this.damping, vy * this.damping);
 
         if (keyIsDown('ArrowUp') || keyIsDown('ArrowRight') || keyIsDown('ArrowDown')|| keyIsDown('ArrowLeft')) {
             this.last_dir = this.pos.add(this.velocity.normalize(2));
+        }
+
+        if (keyIsDown('ArrowUp') && keyIsDown('ArrowRight')) {
+            this.dir = "up_right";
+        }
+        else if (keyIsDown('ArrowUp') && keyIsDown('ArrowLeft')) {
+            this.dir = "up_left";
+        }
+        else if (keyIsDown('ArrowDown') && keyIsDown('ArrowRight')) {
+            this.dir = "down_right";
+        }
+        else if (keyIsDown('ArrowDown') && keyIsDown('ArrowLeft')) {
+            this.dir = "down_left";
         }
     }
 
@@ -189,7 +210,31 @@ class Player extends EngineObject {
     render(){ 
         
         drawTile(vec2(this.pos.x, this.pos.y),vec2(0.95, 0.95),this.tileInfo);
-        drawTile(vec2(this.pos.x,this.pos.y + 0.4),vec2(0.95,0.95),this.tileInfoHead);
+        
+        if (this.dir == "down_right") {
+            drawTile(vec2(this.pos.x,this.pos.y + 0.4),vec2(0.95,0.95),this.tileInfoHeadTurn);
+        }
+        else if (this.dir == "down_left"){
+            drawTile(vec2(this.pos.x - 0.2,this.pos.y + 0.4),vec2(0.95,0.95),this.tileInfoHeadTurn, new Color(1,1,1,1), 0, true);
+        }
+        else if (this.dir == "up_right") {
+            drawTile(vec2(this.pos.x,this.pos.y + 0.4),vec2(0.95,0.95),this.tileInfoHeadTurnUp);
+        }
+        else if (this.dir == "up_left") {
+            drawTile(vec2(this.pos.x - 0.2,this.pos.y + 0.4),vec2(0.95,0.95),this.tileInfoHeadTurnUp, new Color(1,1,1,1), 0, true);
+        }
+        else if (this.dir == "up"){
+            drawTile(vec2(this.pos.x,this.pos.y + 0.4),vec2(0.95,0.95),this.tileInfoHeadBack);
+        }
+        else if (this.dir == "down") {
+            drawTile(vec2(this.pos.x,this.pos.y + 0.4),vec2(0.95,0.95),this.tileInfoHead);
+        }
+        else if (this.dir == "right") {
+            drawTile(vec2(this.pos.x,this.pos.y + 0.4),vec2(0.95,0.95),this.tileInfoHeadRight);
+        }
+        else if (this.dir == "left") {
+            drawTile(vec2(this.pos.x - 0.2,this.pos.y + 0.4),vec2(0.95,0.95),this.tileInfoHeadRight, new Color(1,1,1,1), 0, true);
+        }
         // if (this.in_interact_area) {
         //     drawRect(vec2(this.pos.x - 0.1, this.pos.y + 1.14), vec2(0.4,0.5), new Color(0,0,0,1));
         //     drawText("?", vec2(this.pos.x - 0.1, this.pos.y + 1.1), 0.5);
