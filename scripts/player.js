@@ -11,7 +11,7 @@ class Player extends EngineObject {
         this.current_convo = "";
         this.in_interact_area = false;
         this.in_area = "";
-        this.found_info = "";
+        this.in_house_id = -1;
         this.name = name;
         this.pause = false;
         this.talked_with = {
@@ -83,97 +83,77 @@ class Player extends EngineObject {
     }
 
     collideWithObject(obj) {
-        if (obj.type !== "area") {
-            this.velocity = vec2(0,0);
-        }
-        else {
+        if (obj.type == "area") {
             this.in_interact_area = true;
             this.in_area = obj.subtype;
+
             return false;
         }
+
+        this.velocity = vec2(0,0);
+        this.in_interact_area = false;
+        this.in_area = "";
 
         return true;
     }
 
     interact(interactables) {
-        let objects = engineObjectsRaycast(this.pos, this.last_dir, interactables);
+        let obj;
+        const objects = engineObjectsRaycast(this.pos, this.last_dir, interactables);
         if (objects.length !== 0) {
-            if (this.in_area == "talking_area") {
-                for(let i = 0; i < objects.length; i++) {
-                    if (objects[i].type == "villager") {
-                        this.found_info = objects[i];
-                        break;
-                    }
-                }
+            obj = objects[0];
+            if (obj.type == "home"){
+                this.in_house_id = obj.id;
             }
-            else if (this.in_area == "entering_area" || this.in_area == "leaving_area") {
-                for(let i = 0; i < objects.length; i++) {
-                    if (objects[i].type == "home") {
-                        this.found_info = objects[i];
-                        break;
-                    }
-                }
-            }
-            else {
-                this.found_info = "";
-                this.in_interact_area = false;
-                this.in_area = "";
-            }
-        }
-        else {
-            this.found_info = "";
-            this.in_interact_area = false;
-            this.in_area = "";
         }
 
         if (keyWasPressed('Enter')) {
-            if (this.found_info !== "") {
-                if (this.in_area == "talking_area" && this.found_info.type == "villager") {
+            if (obj !== undefined) {
+                if (this.in_area == "talking_area" && obj.type == "villager") {
                     if (this.current_convo !== "") {
                         let movedText = this.current_convo.moveText();
                         if (!movedText) {
                             this.current_convo = this.current_convo.destroy();
                             this.current_convo = "";
-                            this.found_info = "";
                             this.talking = false;
                         }
                     }
                     else {
                         this.talking = true;
-                        this.talk(this.found_info.name, this.found_info.talk_type);
+                        this.talk(obj.name, obj.talk_type);
                     }
                 }
-                else if (this.in_area == "entering_area" && this.found_info.type == "home") {
-                    this.enterArea();
-                }
-                else if (this.in_area == "leaving_area" && this.found_info.type == "home") {
-                    this.leaveArea();
+                
+                if (this.in_area == "entering_area" && obj.type == "home") {
+                    this.enterArea(obj);
                 }
             }
+            
+            if (this.in_area == "leaving_area") {
+                this.leaveArea();
+            }
         }
+
+        this.in_interact_area = false;
     }
 
-    enterArea() {
-        if (!this.found_info.locked) {
-            this.teleport(this.found_info.home_pos); // consider where to start
-            this.in_interact_area = false;
-            this.found_info = "";
-            this.in_area = "";
+    enterArea(obj) {
+        if (!obj.locked) {
+            this.teleport(obj.home_pos); // consider where to start
         }
     }
 
     leaveArea() {
-        this.teleport(this.found_info.leave_pos);
-        this.in_interact_area = false;
-        this.found_info = "";
-        this.in_area = "";
+        if (this.in_house_id !== -1) {
+            this.teleport(homes[this.in_house_id].door_area.pos);
+            this.in_house_id = -1;
+        }
     }
 
     teleport(pos) {
-        // this.pause = true;
         this.velocity = vec2(0,0);
-        this.pos = vec2(pos.x, pos.y);
-        // this interact area = false
+        this.pos = vec2(pos.x,pos.y);
+        this.last_dir = this.pos.add(this.velocity.normalize(2));
     }
 
     talk(villager_name, talk_type) {

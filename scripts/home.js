@@ -1,9 +1,9 @@
 'use strict';
 
 class Home extends Wall {
-    constructor(pos, size, owner, furniture_data, floor_plan, outside_floor_plan, exterior, home_pos=vec2(-20,-20)) {
+    constructor(id, pos, size, owner, furniture_data, floor_plan, outside_floor_plan, exterior, home_pos=vec2(-20,-20)) {
         super(pos, size, "home");
-
+        this.id = id;
         this.owner = owner;
         this.locked = false;
         this.furniture_data = furniture_data;
@@ -13,8 +13,8 @@ class Home extends Wall {
         this.home_pos = home_pos;
         this.leave_pos = vec2(pos.x, pos.y - 2);
         this.type = "home";
-        this.area = new InteractArea(vec2(pos.x, pos.y - 2), vec2(1,1), "entering_area");
-        this.area = new InteractArea(home_pos, vec2(1,1), "leaving_area");
+        this.door_area = new InteractArea(vec2(pos.x, pos.y - 2), vec2(1,1), "entering_area");
+        this.home_area = new InteractArea(home_pos, vec2(1,1), "leaving_area");
     }
 
     unlockHome() {
@@ -24,5 +24,9 @@ class Home extends Wall {
     
     lockHome() {
         this.locked = true;
+    }
+
+    getId() {
+        return this.id;
     }
 }
