@@ -30,6 +30,7 @@ class Player extends EngineObject {
         this.tileInfoHead = tile(18);
         
         this.last_dir = this.pos.add(this.velocity.normalize(2));
+        
     }
 
     move() {
@@ -79,15 +80,15 @@ class Player extends EngineObject {
             if (this.in_area == "talking_area") {
                 for(let i = 0; i < objects.length; i++) {
                     if (objects[i].type == "villager") {
-                        this.found_info = objects[i].info;
+                        this.found_info = objects[i];
                         break;
                     }
                 }
             }
-            else if (this.in_area == "entering_area") {
+            else if (this.in_area == "entering_area" || this.in_area == "leaving_area") {
                 for(let i = 0; i < objects.length; i++) {
                     if (objects[i].type == "home") {
-                        this.found_info = objects[i].info;
+                        this.found_info = objects[i];
                         break;
                     }
                 }
@@ -124,6 +125,9 @@ class Player extends EngineObject {
                 else if (this.in_area == "entering_area" && this.found_info.type == "home") {
                     this.enterArea();
                 }
+                else if (this.in_area == "leaving_area" && this.found_info.type == "home") {
+                    this.leaveArea();
+                }
             }
         }
     }
@@ -135,6 +139,13 @@ class Player extends EngineObject {
             this.found_info = "";
             this.in_area = "";
         }
+    }
+
+    leaveArea() {
+        this.teleport(this.found_info.leave_pos);
+        this.in_interact_area = false;
+        this.found_info = "";
+        this.in_area = "";
     }
 
     teleport(pos) {
@@ -158,11 +169,11 @@ class Player extends EngineObject {
             this.talked_with[villager_name]++;
             let talk = this.talked_with[villager_name];
             if (villager_convos[villager_name + "_" + talk] == undefined) {
-                villagers[villager_name].info.talk_type = 0;
+                villagers[villager_name].talk_type = 0;
                 this.talked_with[villager_name] = 0;
             }
             else {
-                villagers[villager_name].info.talk_type = talk;
+                villagers[villager_name].talk_type = talk;
                 this.talked_with[villager_name] = talk;
             }
         }
@@ -179,10 +190,10 @@ class Player extends EngineObject {
         
         drawTile(vec2(this.pos.x, this.pos.y),vec2(0.95, 0.95),this.tileInfo);
         drawTile(vec2(this.pos.x,this.pos.y + 0.4),vec2(0.95,0.95),this.tileInfoHead);
-        if (this.in_interact_area) {
-            drawRect(vec2(this.pos.x - 0.1, this.pos.y + 1.14), vec2(0.4,0.5), new Color(0,0,0,1));
-            drawText("?", vec2(this.pos.x - 0.1, this.pos.y + 1.1), 0.5);
-        }
+        // if (this.in_interact_area) {
+        //     drawRect(vec2(this.pos.x - 0.1, this.pos.y + 1.14), vec2(0.4,0.5), new Color(0,0,0,1));
+        //     drawText("?", vec2(this.pos.x - 0.1, this.pos.y + 1.1), 0.5);
+        // }
     }
 
 
