@@ -139,13 +139,13 @@ class Player extends EngineObject {
     }
 
     enterArea(obj) {
-        if (!obj.locked) {
-            this.teleport(obj.home_pos); // consider where to start
+        if (!obj.locked && this.dir == "up") {
+            this.teleport(vec2(obj.home_pos.x, obj.home_pos.y)); // consider where to start
         }
     }
 
     leaveArea() {
-        if (this.in_house_id !== -1) {
+        if (this.in_house_id !== -1 && this.dir == "down") { // raycast still facing house when leaving it, just need to face up for now
             this.teleport(homes[this.in_house_id].door_area.pos);
             this.in_house_id = -1;
         }
@@ -186,7 +186,27 @@ class Player extends EngineObject {
     }
 
     moveCamera() {
-        setCameraPos(this.pos);
+        let x = this.pos.x;
+        let y = this.pos.y;
+
+
+        if (this.in_house_id == -1) {
+            if (this.pos.x > 24) {
+                x = 24;
+            }
+            else if (this.pos.x < 8) {
+                x = 8;
+            }
+    
+            if (this.pos.y < 4) {
+                y = 4;
+            }
+            else if (this.pos.y > 29) {
+                y = 29;
+            }
+        }
+
+        setCameraPos(vec2(x, y));
     }
 
     render(){ 
