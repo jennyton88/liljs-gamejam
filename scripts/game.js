@@ -1,63 +1,48 @@
 'use strict';
 
+
 let player;
 let interactables = [];
-
-const tile_type = {
-    "9999" : 9, // unknown
-    "6,85,0": 17, // lilypads
-    "255,94,26": 16, // flowers
-    "77,166,255": 31, // water
-    "143,222,93": 8, // grass
-    "241,249,3": 21, // sand
-    "255,181,112": 20, //path
-};
-
-
-let layers = [];
 let villagers = {};
 let homes = {};
 
 function createLevel() {
-    const maps_start = 1;
-    const maps_end = 4;
-    
-    const tile_collision_layer_size = vec2(32, 32);
-    initTileCollision(tile_collision_layer_size);
+    let tile_img = textureInfos[0].image;
+    mainContext.drawImage(tile_img, 0, 0);
 
-    for (let j = maps_start; j < maps_end; j++) {
-        let tile_img = textureInfos[j].image;
-        mainContext.drawImage(tile_img, 0, 0);
+    let map_offsets = [0, 32, 64, 96];
+    const layer_size = vec2(32, 32);
 
-        let img_data = mainContext.getImageData(0, 0, tile_img.width , tile_img.height).data;
+    for (let l = 0; l < map_offsets.length; l++) {
+        let tile_layer = new TileLayer(vec2(), vec2(32,32));
+        let img_data = mainContext.getImageData(map_offsets[l], 47, tile_img.width , tile_img.height).data;
+        for (let i = 0; i < layer_size.x + 1; i++) {
+            for (let j = 0; j < layer_size.y + 1; j++) {
+                const k = i + tile_img.width * ( layer_size.y - j);
 
-        let pos = vec2(0,0);
-        let tile_layer = new TileLayer(pos, tile_collision_layer_size);
-
-        for (pos.x = 0; pos.x < tile_collision_layer_size.x; pos.x++) {
-            for (pos.y = tile_collision_layer_size.y; pos.y--;) {
-                // check if this pixel is set
-                const i = pos.x + tile_img.width * ( tile_collision_layer_size.y - pos.y);
-                if (!img_data[4 * i]) {
+                if (img_data[4 * k + 3] !== 255) { // check alpha
                     continue;
                 }
 
-                const rgb = [img_data[4 * i], img_data[4 * i + 1], img_data[4 * i + 2]];
+                const rgb = [img_data[4 * k], img_data[4 * k + 1], img_data[4 * k + 2]];
+    
+                let tile_index = 9999;
 
-                let tile_index = tile_type["" + rgb] !== "undefined"? tile_type["" + rgb]: 9999;
+                if (tile_type["" + rgb] !== undefined) {
+                    tile_index = tile_type["" + rgb];
+                }
+
+                if (l == map_offsets.length - 1){
+                    setTileCollisionData(vec2(i,j), 1);
+                    tile_index = tile_type["-1,-1,-1"];
+                }
 
                 let data = new TileLayerData(tile_index);
-
-                if (j == maps_start) {
-                    setTileCollisionData(pos, 1);
-                }
-                
-                tile_layer.setData(pos, data);
+                tile_layer.setData(vec2(i,j), data);
             }
         }
-        
+
         tile_layer.redraw();
-        layers.push(tile_layer);
     }
 }
 
@@ -66,17 +51,22 @@ function gameInit()
 {
     // called once after the engine starts up
     // setup the game
+    setTileFixBleedScale(0.01);
     setCanvasPixelated(true);
     setCanvasFixedSize(vec2(1280, 720));
     setCameraScale(80);
+
+    initTileCollision(vec2(255,255));
 
     createLevel();
 
 
     let villager = new Villager(vec2(10,18), vec2(0.90, 0.90), "Bob");
-    let home = new Home(0, vec2(20,20), vec2(3,3), "Bob", -1, -1, -1, -1);
-    interactables.push(villager, home);
+    let villager_1 = new Villager(vec2(18,18), vec2(0.90, 0.90), "Tulip");
+    let home = new Home(0, vec2(20,20), vec2(3,3), "Bob", home_plan, home_plan, home_plan, home_plan, vec2(39.5,41.5));
+    interactables.push(villager, villager_1, home);
     villagers[villager.getName()] = villager;
+    villagers[villager_1.getName()] = villager_1;
     homes[home.getId()] = home;
 
     player = new Player(vec2(16, 18), vec2(0.95, 0.95), "Not_Bob");
@@ -125,5 +115,5 @@ function gameRenderPost()
 
 ///////////////////////////////////////////////////////////////////////////////
 // Startup LittleJS Engine
-engineInit(gameInit, gameUpdate, gameUpdatePost, gameRender, gameRenderPost, ['./assets/tilesheet.png', './assets/tile_walls.png', './assets/ground.png', './assets/plant_life.png']);
+engineInit(gameInit, gameUpdate, gameUpdatePost, gameRender, gameRenderPost, ['./assets/tilesheetexpanded.png']);
 
