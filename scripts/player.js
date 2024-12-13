@@ -113,6 +113,7 @@ class Player extends EngineObject {
                     if (this.current_convo !== "") {
                         let movedText = this.current_convo.moveText();
                         if (!movedText) {
+                            villagers[this.current_convo.villager_name].setOppositeDir("up");
                             this.current_convo = this.current_convo.destroy();
                             this.current_convo = "";
                             this.talking = false;
@@ -158,7 +159,6 @@ class Player extends EngineObject {
 
     talk(villager_name, talk_type) {
         let t_type = talk_type;
-        console.log(t_type)
         let convo = "";
         if (this.met[villager_name] == undefined) {
             this.met[villager_name] = true;
@@ -178,7 +178,9 @@ class Player extends EngineObject {
                 this.talked_with[villager_name] = talk;
             }
         }
-// set villager talk type
+
+        villagers[villager_name].setOppositeDir(this.dir);
+
         convo = villager_convos[villager_name + "_" + t_type];
         this.current_convo = new Conversation(this.name, villager_name, talk_type, convo);
     }
