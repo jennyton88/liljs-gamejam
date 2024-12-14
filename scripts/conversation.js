@@ -23,7 +23,7 @@ class Conversation {
         this.counter++;
         
         if (this.counter == this.lines.length) {
-            this.counter = 0;
+            this.counter = 0;  
             return false;
         }
         
