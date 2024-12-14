@@ -16,8 +16,8 @@ function createLevel() {
     for (let l = 0; l < map_offsets.length; l++) {
         let tile_layer = new TileLayer(vec2(), vec2(32,32));
         let img_data = mainContext.getImageData(map_offsets[l], 47, tile_img.width , tile_img.height).data;
-        for (let i = 0; i < layer_size.x + 1; i++) {
-            for (let j = 0; j < layer_size.y + 1; j++) {
+        for (let i = 0; i < layer_size.x; i++) {
+            for (let j = 0; j < layer_size.y; j++) {
                 const k = i + tile_img.width * ( layer_size.y - j);
 
                 if (img_data[4 * k + 3] !== 255) { // check alpha
@@ -37,7 +37,14 @@ function createLevel() {
                     tile_index = tile_type["-1,-1,-1"];
                 }
 
-                let data = new TileLayerData(tile_index);
+                let mirrored = false;
+                if (l == map_offsets.length - 2) {
+                    if (wall_plan[i][j] == 1) {
+                        mirrored = true;
+                    }
+                }
+
+                let data = new TileLayerData(tile_index, 0, mirrored);
                 tile_layer.setData(vec2(i,j), data);
             }
         }
@@ -115,5 +122,5 @@ function gameRenderPost()
 
 ///////////////////////////////////////////////////////////////////////////////
 // Startup LittleJS Engine
-engineInit(gameInit, gameUpdate, gameUpdatePost, gameRender, gameRenderPost, ['./assets/tilesheetexpanded.png']);
+engineInit(gameInit, gameUpdate, gameUpdatePost, gameRender, gameRenderPost, ['tilesheetexpanded.png']);
 
