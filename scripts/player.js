@@ -102,9 +102,6 @@ class Player extends EngineObject {
         const objects = engineObjectsRaycast(this.pos, this.last_dir, interactables);
         if (objects.length !== 0) {
             obj = objects[0];
-            if (obj.type == "home"){
-                this.in_house_id = obj.id;
-            }
         }
 
         if (keyWasPressed('Enter')) {
@@ -125,12 +122,13 @@ class Player extends EngineObject {
                     }
                 }
                 
-                if (this.in_area == "entering_area" && obj.type == "home") {
+                if (this.in_area == "entering_area" && obj.type == "home" && this.dir == "up") {
                     this.enterArea(obj);
+                    this.in_house_id = obj.id;
                 }
             }
             
-            if (this.in_area == "leaving_area") {
+            if (this.in_area == "leaving_area" && this.dir == "down") {
                 this.leaveArea();
             }
         }
