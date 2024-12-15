@@ -19,16 +19,16 @@ class Villager extends Wall {
         this.area = new InteractArea(pos, vec2(2.5,2.5), "talking_area");
 
         this.head = {
-            "up":           tile(7),
-            "up_right":     tile(10),
-            "right":        tile(9),
-            "down_right":   tile(19),
-            "down":         tile(18),
-            "down_left":    tile(19),
-            "left":         tile(9),
-            "up_left":      tile(10),
+            "up":           tile(43),
+            "up_right":     tile(32),
+            "right":        tile(42),
+            "down_right":   tile(41),
+            "down":         tile(30),
+            "down_left":    tile(41),
+            "left":         tile(42),
+            "up_left":      tile(32),
         }
-        this.body = tile(29);
+        this.body = tile(52);
         
         this.dir = dir;
         this.original_dir = this.dir;
