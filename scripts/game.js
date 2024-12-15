@@ -51,6 +51,13 @@ function createLevel() {
                     }
                 }
 
+                if (l == map_offsets.length - 3) {
+                    if ("" + rgb == "21,8,130") {
+                        new Tree(vec2(i,j), vec2(0.95, 0.95));
+                        tile_index = tile_type["-1,-1,-1"];
+                    }
+                }
+
                 let data = new TileLayerData(tile_index, 0, mirrored);
                 tile_layer.setData(vec2(i,j), data);
             }
@@ -79,7 +86,8 @@ function gameInit()
     let villager = new Villager(vec2(10,18), vec2(0.90, 0.90), "Bob", "down", "find_item", item[random.int(item.length)]);
     let villager_1 = new Villager(vec2(18,18), vec2(0.90, 0.90), "Tulip", "down", "find_item", item[random.int(item.length)]);
     let home = new Home(0, vec2(20,20), vec2(3,3), "Bob", home_plan, home_plan, home_plan, home_plan, vec2(39.5,41.5));
-    interactables.push(villager, villager_1, home);
+    let viewing_area = new InteractArea(vec2(20, 3), vec2(2,2), "viewing_area");
+    interactables.push(villager, villager_1, home, viewing_area);
     villagers[villager.getName()] = villager;
     villagers[villager_1.getName()] = villager_1;
     homes[home.getId()] = home;
