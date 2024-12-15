@@ -2,10 +2,9 @@
 
 
 class Conversation {
-    constructor(player_name, villager_name, type, lines) {
+    constructor(player_name, villager_name, lines) {
         this.player_name = player_name;
         this.villager_name = villager_name;
-        this.type = type;
         this.lines = lines;
         this.counter = 0;
     }

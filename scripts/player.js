@@ -161,32 +161,45 @@ class Player extends EngineObject {
         this.last_dir = this.pos.add(this.velocity.normalize(2));
     }
 
-    talk(villager_name, talk_type) {
-        let t_type = talk_type;
-        let convo = "";
-        if (this.met[villager_name] == undefined) {
-            this.met[villager_name] = true;
-            this.talked_with[villager_name] = 0;
-            this.friendship_level[villager_name] = 0;
-            t_type = "intro";
-        }
-        else if (this.met[villager_name]) {
-            this.talked_with[villager_name]++;
-            let talk = this.talked_with[villager_name];
-            if (villager_convos[villager_name + "_" + talk] == undefined) {
-                villagers[villager_name].talk_type = 0;
-                this.talked_with[villager_name] = 0;
+    talk(villager) {
+        this.talking = true;
+        let name = villager.name;
+        let talk_type;
+
+        if (this.met[name]) {
+            let talk = this.talked_with[name];
+
+            let key = name + "_" + talk;
+
+            if (villager_convos[key] == undefined) { // reset loop
+                talk_type = 0;
+                talk = 0;
             }
             else {
-                villagers[villager_name].talk_type = talk;
-                this.talked_with[villager_name] = talk;
+                talk_type = talk;
             }
+
+            talk++;
+            this.talked_with[name] = talk;
+        }
+        else if (this.met[name] == undefined) { // haven't introduced
+            this.met[name] = true;
+            this.talked_with[name] = 0;
+            talk_type = "intro";
         }
 
-        villagers[villager_name].setOppositeDir(this.dir);
+        let key = name + "_";
 
-        convo = villager_convos[villager_name + "_" + t_type];
-        this.current_convo = new Conversation(this.name, villager_name, talk_type, convo);
+        // if (villagers[name].task == talk_type) {
+        //     key = "";
+        // }
+
+        let convo = villager_convos[key + talk_type];
+        this.convo = new Conversation(this.name, name, convo);
+
+        if (talk_type == "intro") { talk_type = 0; }
+
+        villagers[name].setTalkType(talk_type);
     }
 
     moveCamera() {
