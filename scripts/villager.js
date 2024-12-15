@@ -1,53 +1,59 @@
 'use strict';
 
 class Villager extends Wall {
-    constructor(pos, size=vec2(1,1), name) {
+    constructor(pos, size=vec2(1,1), name, dir, task, item) {
         super(pos, size, "villager");
 
-        this.name = name,
-        this.talk_type = 0,
-        this.talking = false,
-        this.pos = pos,
-        this.type = "villager" // could be better
+        this.name = name;
+
+        this.talk_type = "intro";
+        this.talking = false;
+
+        this.task = task;
+        this.task_item = item;
+        this.task_completed = false;
+
+        this.pos = pos;
+        this.type = "villager";
+
         this.area = new InteractArea(pos, vec2(2.5,2.5), "talking_area");
 
-        this.tileInfo = tile(29);
-        this.tileInfoHead = tile(18);
-        this.tileInfoHeadRight = tile(9);
-        this.tileInfoHeadTurn = tile(19);
-        this.tileInfoHeadBack = tile(7);
-        this.tileInfoHeadTurnUp = tile(10);
-        this.dir = "down";
+        this.head = {
+            "up":           tile(7),
+            "up_right":     tile(10),
+            "right":        tile(9),
+            "down_right":   tile(19),
+            "down":         tile(18),
+            "down_left":    tile(19),
+            "left":         tile(9),
+            "up_left":      tile(10),
+        }
+        this.body = tile(29);
+        
+        this.dir = dir;
+        this.original_dir = this.dir;
     }
 
     render(){ 
-        drawTile(vec2(this.pos.x,this.pos.y),vec2(0.95, 0.95),this.tileInfo);
-        // drawTile(vec2(this.pos.x,this.pos.y + 0.4),vec2(0.95,0.95),this.tileInfoHead);
+        let pos = vec2(this.pos.x, this.pos.y);
+        const size = vec2(0.95, 0.95);
+        const color = new Color(1,1,1,1);
+        const angle = 0;
+        let mirrored = false;
 
-        if (this.dir == "down_right") {
-            drawTile(vec2(this.pos.x,this.pos.y + 0.4),vec2(0.95,0.95),this.tileInfoHeadTurn);
+        drawTile(pos, size, this.body, color, angle, mirrored);
+
+        const offset_y = 0.4;
+
+        if (this.dir == "down_left" 
+            || this.dir == "up_left" 
+            || this.dir == "left") {
+            pos.x -= 0.2;
+            mirrored = true;
         }
-        else if (this.dir == "down_left"){
-            drawTile(vec2(this.pos.x - 0.2,this.pos.y + 0.4),vec2(0.95,0.95),this.tileInfoHeadTurn, new Color(1,1,1,1), 0, true);
-        }
-        else if (this.dir == "up_right") {
-            drawTile(vec2(this.pos.x,this.pos.y + 0.4),vec2(0.95,0.95),this.tileInfoHeadTurnUp);
-        }
-        else if (this.dir == "up_left") {
-            drawTile(vec2(this.pos.x - 0.2,this.pos.y + 0.4),vec2(0.95,0.95),this.tileInfoHeadTurnUp, new Color(1,1,1,1), 0, true);
-        }
-        else if (this.dir == "up"){
-            drawTile(vec2(this.pos.x,this.pos.y + 0.4),vec2(0.95,0.95),this.tileInfoHeadBack);
-        }
-        else if (this.dir == "down") {
-            drawTile(vec2(this.pos.x,this.pos.y + 0.4),vec2(0.95,0.95),this.tileInfoHead);
-        }
-        else if (this.dir == "right") {
-            drawTile(vec2(this.pos.x,this.pos.y + 0.4),vec2(0.95,0.95),this.tileInfoHeadRight);
-        }
-        else if (this.dir == "left") {
-            drawTile(vec2(this.pos.x - 0.2,this.pos.y + 0.4),vec2(0.95,0.95),this.tileInfoHeadRight, new Color(1,1,1,1), 0, true);
-        }
+
+        pos.y += offset_y;
+        drawTile(pos, size, this.head[this.dir], color, angle, mirrored);
     }
 
     getName() {
@@ -56,5 +62,18 @@ class Villager extends Wall {
 
     setOppositeDir(dir) {
         this.dir = opposites[dir];
+    }
+
+    setDir(dir) {
+        this.dir = dir;
+    }
+
+    setTalkType(talk_type) {
+        this.talk_type = talk_type;
+    }
+
+    resetTask(task) {
+        this.task = task;
+        this.task_completed = false;
     }
 }

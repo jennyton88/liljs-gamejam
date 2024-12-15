@@ -15,6 +15,7 @@ class Player extends EngineObject {
 
         this.talking = false;
         this.convo = "";
+        this.making_choice = false;
 
         this.in_house_id = -1;
 
@@ -22,6 +23,10 @@ class Player extends EngineObject {
         };
         this.met = {
         };
+        this.task_list = {
+
+        };
+        this.items = [];
 
         this.head = {
             "up":           tile(7),
@@ -104,27 +109,35 @@ class Player extends EngineObject {
     }
 
     interact(interactables) {
-        let obj;
-        const objects = engineObjectsRaycast(this.pos, this.last_dir, interactables);
-        if (objects.length !== 0) {
-            obj = objects[0];
-        }
-
         if (keyWasPressed('Enter')) {
+            const objects = engineObjectsRaycast(this.pos, this.last_dir, interactables);
+            let obj = (objects.length !== 0)? objects[0]: undefined;
+
             if (obj !== undefined) {
-                if (this.in_area == "talking_area" && obj.type == "villager") {
-                    if (this.current_convo !== "") {
-                        let movedText = this.current_convo.moveText();
-                        if (!movedText) {
-                            villagers[this.current_convo.villager_name].setOppositeDir("up");
-                            this.current_convo = this.current_convo.destroy();
-                            this.current_convo = "";
-                            this.talking = false;
+                if (obj.type == "villager" && this.in_area == "talking_area") {
+                    if (!this.talking) {
+                        this.talk(obj);
+                    }
+                    else if (this.talking && this.making_choice) {
+                        this.making_choice = false;
+                        let choice = this.convo.getChoice();
+                        this.convo.displayResult();
+                        this.convo.resetChoice();
+
+                        if (choice == 0) {
+                            this.task_list[obj.name] = obj.task_item;
+                        }
+                        else if (choice == 1) {
+                            this.task_list[obj.name] = "no";
                         }
                     }
-                    else {
-                        this.talking = true;
-                        this.talk(obj.name, obj.talk_type);
+                    else if (this.talking) {
+                        if (!this.convo.moveText()) { // finished their dialogue loop
+                            villagers[obj.name].setDir(obj.original_dir);
+                            this.convo = this.convo.destroy();
+                            this.convo = "";
+                            this.talking = false;
+                        }
                     }
                 }
                 
@@ -136,6 +149,17 @@ class Player extends EngineObject {
             
             if (this.in_area == "leaving_area" && this.dir == "down") {
                 this.leaveArea();
+            }
+        }
+
+        if (this.talking && this.making_choice) {
+            if (this.convo.max_choice !== -1) {
+                if (keyWasPressed('ArrowDown')) {
+                    this.convo.moveChoice(-1);
+                }
+                else if (keyWasPressed('ArrowUp')) {
+                    this.convo.moveChoice(1);
+                }
             }
         }
 
@@ -164,7 +188,9 @@ class Player extends EngineObject {
     talk(villager) {
         this.talking = true;
         let name = villager.name;
-        let talk_type;
+        let talk_type = villager.talk_type;
+
+        villagers[name].setOppositeDir(this.dir);
 
         if (this.met[name]) {
             let talk = this.talked_with[name];
@@ -172,8 +198,13 @@ class Player extends EngineObject {
             let key = name + "_" + talk;
 
             if (villager_convos[key] == undefined) { // reset loop
-                talk_type = 0;
-                talk = 0;
+                if (!villagers[name].task_completed) {
+                    talk_type = villagers[name].task;
+                }
+                else {
+                    talk_type = 0;
+                    talk = 0;
+                }
             }
             else {
                 talk_type = talk;
@@ -182,20 +213,24 @@ class Player extends EngineObject {
             talk++;
             this.talked_with[name] = talk;
         }
-        else if (this.met[name] == undefined) { // haven't introduced
+        else if (talk_type == "intro") {
             this.met[name] = true;
             this.talked_with[name] = 0;
-            talk_type = "intro";
         }
 
         let key = name + "_";
 
-        // if (villagers[name].task == talk_type) {
-        //     key = "";
-        // }
+        if (talk_type == villagers[name].task) {
+            key = "";
+            this.making_choice = true;
+        }
 
         let convo = villager_convos[key + talk_type];
-        this.convo = new Conversation(this.name, name, convo);
+        this.convo = new Conversation(this.name, name);
+        this.convo.setUpWords(convo);
+        if (this.making_choice) {
+            this.convo.setUpChoices(talk_type);
+        }
 
         if (talk_type == "intro") { talk_type = 0; }
 
