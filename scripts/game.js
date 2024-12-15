@@ -5,6 +5,13 @@ let player;
 let interactables = [];
 let villagers = {};
 let homes = {};
+let layers = {};
+
+let view_area = [
+    58, 59, 60,
+    69, 70, 71,
+    80, 81, 82
+];
 
 function createLevel() {
     let tile_img = textureInfos[0].image;
@@ -122,6 +129,34 @@ function gameRenderPost()
         }
     }
 
+    if (player.viewing) {
+        drawViewArea();
+    }
+
+}
+
+function drawViewArea() {
+    setCameraScale(220);
+    let counter = 3;
+    let size = vec2(1,1);
+    let pos = vec2(cameraPos.x, cameraPos.y);
+    let offset_x = -1;
+    let offset_y = 1;
+
+    let color = new Color();
+    color.setHex("#2e2e2eff")
+
+    drawRect(vec2(cameraPos.x, cameraPos.y), vec2(20,20), color);
+    
+    for (let i = 0; i < 9; i++) {
+        drawTile(vec2(pos.x + offset_x,pos.y + offset_y), size, tile(view_area[i]));
+        offset_x++;
+        if (i ==  counter - 1) {
+            offset_y--;
+            offset_x = -1;
+            counter += 3;
+        }
+    }
 }
 
 ///////////////////////////////////////////////////////////////////////////////
