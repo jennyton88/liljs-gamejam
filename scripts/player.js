@@ -7,32 +7,34 @@ class Player extends EngineObject {
 
         this.setCollision();
         this.damping = 0.95;
-        this.talking = false;
-        this.current_convo = "";
+
+        this.name = name;
+
         this.in_interact_area = false;
         this.in_area = "";
-        this.in_house_id = -1;
-        this.name = name;
-        this.pause = false;
-        this.talked_with = {
 
-        };
-            // Get villager names "Bob": 2 times today, get convos
-            // introduced : true/ false or -1 on the talked with. reset to 0 when introduced and new day starts if haven't introduced and day resets, stay at -1
-        this.friendship_level = {
-            // villager: lvl
+        this.talking = false;
+        this.convo = "";
+
+        this.in_house_id = -1;
+
+        this.talked_with = {
         };
         this.met = {
-
         };
 
-        this.tileInfo = tile(29);
-        this.tileInfoHead = tile(18);
-        this.tileInfoHeadRight = tile(9);
-        this.tileInfoHeadTurn = tile(19);
-        this.tileInfoHeadBack = tile(7);
-        this.tileInfoHeadTurnUp = tile(10);
-        
+        this.head = {
+            "up":           tile(7),
+            "up_right":     tile(10),
+            "right":        tile(9),
+            "down_right":   tile(19),
+            "down":         tile(18),
+            "down_left":    tile(19),
+            "left":         tile(9),
+            "up_left":      tile(10),
+        }
+        this.body = tile(29);
+
         this.last_dir = this.pos.add(this.velocity.normalize(2));
         this.dir = "down";
     }
@@ -46,17 +48,14 @@ class Player extends EngineObject {
             vy = speed;
             this.dir = "up";
         }
-
         if (keyIsDown('ArrowRight')) {
             vx = speed;
             this.dir = "right";
         }
-
         if (keyIsDown('ArrowDown')) {
             vy = -speed;
             this.dir = "down";
         }
-
         if (keyIsDown('ArrowLeft')) {
             vx = -speed;
             this.dir = "left";
@@ -64,21 +63,28 @@ class Player extends EngineObject {
 
         this.velocity = vec2(vx * this.damping, vy * this.damping);
 
-        if (keyIsDown('ArrowUp') || keyIsDown('ArrowRight') || keyIsDown('ArrowDown')|| keyIsDown('ArrowLeft')) {
+        if (keyIsDown('ArrowUp') 
+            || keyIsDown('ArrowRight') 
+            || keyIsDown('ArrowDown')
+            || keyIsDown('ArrowLeft')) {
             this.last_dir = this.pos.add(this.velocity.normalize(2));
         }
 
-        if (keyIsDown('ArrowUp') && keyIsDown('ArrowRight')) {
-            this.dir = "up_right";
+        if (keyIsDown('ArrowUp')) {
+            if (keyIsDown('ArrowRight')) {
+                this.dir = "up_right";
+            }
+            else if (keyIsDown('ArrowLeft')) {
+                this.dir = "up_left";
+            }
         }
-        else if (keyIsDown('ArrowUp') && keyIsDown('ArrowLeft')) {
-            this.dir = "up_left";
-        }
-        else if (keyIsDown('ArrowDown') && keyIsDown('ArrowRight')) {
-            this.dir = "down_right";
-        }
-        else if (keyIsDown('ArrowDown') && keyIsDown('ArrowLeft')) {
-            this.dir = "down_left";
+        else if (keyIsDown('ArrowDown')) {
+            if (keyIsDown('ArrowRight')) {
+                this.dir = "down_right";
+            }
+            else if (keyIsDown('ArrowLeft')) {
+                this.dir = "down_left";
+            }
         }
     }
 
@@ -208,33 +214,26 @@ class Player extends EngineObject {
     }
 
     render(){ 
-        
-        drawTile(vec2(this.pos.x, this.pos.y),vec2(0.95, 0.95),this.tileInfo);
-        
-        if (this.dir == "down_right") {
-            drawTile(vec2(this.pos.x,this.pos.y + 0.4),vec2(0.95,0.95),this.tileInfoHeadTurn);
+        let pos = vec2(this.pos.x, this.pos.y);
+        const size = vec2(0.95, 0.95);
+        const color = new Color(1,1,1,1);
+        const angle = 0;
+        let mirrored = false;
+
+        drawTile(pos, size, this.body, color, angle, mirrored);
+
+        const offset_y = 0.4;
+
+        if (this.dir == "down_left" 
+            || this.dir == "up_left" 
+            || this.dir == "left") {
+            pos.x -= 0.2;
+            mirrored = true;
         }
-        else if (this.dir == "down_left"){
-            drawTile(vec2(this.pos.x - 0.2,this.pos.y + 0.4),vec2(0.95,0.95),this.tileInfoHeadTurn, new Color(1,1,1,1), 0, true);
-        }
-        else if (this.dir == "up_right") {
-            drawTile(vec2(this.pos.x,this.pos.y + 0.4),vec2(0.95,0.95),this.tileInfoHeadTurnUp);
-        }
-        else if (this.dir == "up_left") {
-            drawTile(vec2(this.pos.x - 0.2,this.pos.y + 0.4),vec2(0.95,0.95),this.tileInfoHeadTurnUp, new Color(1,1,1,1), 0, true);
-        }
-        else if (this.dir == "up"){
-            drawTile(vec2(this.pos.x,this.pos.y + 0.4),vec2(0.95,0.95),this.tileInfoHeadBack);
-        }
-        else if (this.dir == "down") {
-            drawTile(vec2(this.pos.x,this.pos.y + 0.4),vec2(0.95,0.95),this.tileInfoHead);
-        }
-        else if (this.dir == "right") {
-            drawTile(vec2(this.pos.x,this.pos.y + 0.4),vec2(0.95,0.95),this.tileInfoHeadRight);
-        }
-        else if (this.dir == "left") {
-            drawTile(vec2(this.pos.x - 0.2,this.pos.y + 0.4),vec2(0.95,0.95),this.tileInfoHeadRight, new Color(1,1,1,1), 0, true);
-        }
+
+        pos.y += offset_y;
+        drawTile(pos, size, this.head[this.dir], color, angle, mirrored);
+
         // if (this.in_interact_area) {
         //     drawRect(vec2(this.pos.x - 0.1, this.pos.y + 1.14), vec2(0.4,0.5), new Color(0,0,0,1));
         //     drawText("?", vec2(this.pos.x - 0.1, this.pos.y + 1.1), 0.5);
