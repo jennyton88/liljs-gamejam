@@ -67,16 +67,17 @@ function gameInit()
 
     createLevel();
 
+    let random = new RandomGenerator(1);
 
-    let villager = new Villager(vec2(10,18), vec2(0.90, 0.90), "Bob");
-    let villager_1 = new Villager(vec2(18,18), vec2(0.90, 0.90), "Tulip");
+    let villager = new Villager(vec2(10,18), vec2(0.90, 0.90), "Bob", "down", "find_item", item[random.int(item.length)]);
+    let villager_1 = new Villager(vec2(18,18), vec2(0.90, 0.90), "Tulip", "down", "find_item", item[random.int(item.length)]);
     let home = new Home(0, vec2(20,20), vec2(3,3), "Bob", home_plan, home_plan, home_plan, home_plan, vec2(39.5,41.5));
     interactables.push(villager, villager_1, home);
     villagers[villager.getName()] = villager;
     villagers[villager_1.getName()] = villager_1;
     homes[home.getId()] = home;
 
-    player = new Player(vec2(16, 18), vec2(0.95, 0.95), "Not_Bob");
+    player = new Player(vec2(16, 18), vec2(0.85, 0.95), "Not_Bob");
     player.moveCamera();
 }
 
@@ -115,7 +116,10 @@ function gameRenderPost()
     // called after objects are rendered
     // draw effects or hud that appear above all objects
     if (player.talking) {
-        player.current_convo.displayText();
+        player.convo.displayText();
+        if (player.making_choice) {
+            player.convo.displayChoices();
+        }
     }
 
 }
