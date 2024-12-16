@@ -14,6 +14,9 @@ class Head extends EngineObject {
             "up_left":      tile(32),
         }
         this.dir = dir;
+
+        this.hat = tile(53);
+        this.have_hat = false;
     }
 
     render() {
@@ -34,9 +37,17 @@ class Head extends EngineObject {
 
         pos.y += offset_y;
         drawTile(pos, size, this.head[this.dir], color, angle, mirrored);
+
+        if (this.have_hat) {
+            drawTile(vec2(pos.x, pos.y+0.5), size, this.hat, color, angle, mirrored);
+        }
     }
 
     setDir(dir) {
         this.dir = dir;
+    }
+
+    setHat() {
+        this.have_hat = true;
     }
 }

@@ -59,4 +59,10 @@ class Villager extends Wall {
         this.task = task;
         this.task_completed = false;
     }
+
+    completeTask(){
+        if (this.task_item == "hat") {
+            this.head.setHat();
+        }
+    }
 }

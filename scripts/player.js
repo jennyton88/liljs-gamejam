@@ -317,6 +317,7 @@ class Player extends EngineObject {
                 villagers[name].task_completed = true;
                 talk_type = `${villagers[name].task}_success`;
                 this.task_list[name] = "complete";
+                villagers[name].completeTask();
             }
         }
 
