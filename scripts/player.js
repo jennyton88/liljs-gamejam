@@ -53,6 +53,11 @@ class Player extends EngineObject {
         let vx = 0;
         let vy = 0;
 
+        if (keyIsDown('ShiftLeft') || keyIsDown('ShiftRight')) {
+            speed = 0.2;
+        }
+
+
         if (keyIsDown('ArrowUp')) {
             vy = speed;
             this.dir = "up";
