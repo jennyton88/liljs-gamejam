@@ -191,9 +191,9 @@ class Player extends EngineObject {
                         if (choice == 0) {
                             this.task_list[obj.name] = obj.task_item;
                         }
-                        else if (choice == 1) {
-                            this.task_list[obj.name] = "no";
-                        }
+                        // else if (choice == 1) {
+                        //     this.task_list[obj.name] = "no";
+                        // }
                     }
                     else if (this.talking) {
                         if (!this.convo.moveText()) { // finished their dialogue loop
@@ -266,12 +266,15 @@ class Player extends EngineObject {
         if (this.met[name]) {
             let talk = this.talked_with[name];
 
-            let key = name + "_" + talk;
+            let key = `${name}_${talk}`;
 
             if (villager_convos[key] == undefined) { // reset loop
                 
-                if (villagers[name].task !== "" && !villagers[name].task_completed) {
+                if (this.task_list[name] == undefined && villagers[name].task !== "" && !villagers[name].task_completed) {
                     talk_type = villagers[name].task;
+                }
+                else if (this.task_list[name] !== undefined && !villagers[name].task_completed) {
+                    talk_type = `${villagers[name].task}_question`;
                 }
                 else {
                     talk_type = 0;
@@ -290,14 +293,18 @@ class Player extends EngineObject {
             this.talked_with[name] = 0;
         }
 
-        let key = name + "_";
+        let key = `${name}_`;
 
-        if (villagers[name].task !== "" && talk_type == villagers[name].task) {
+        if (this.task_list[name] == undefined && villagers[name].task !== "" && talk_type == villagers[name].task) {
             key = "";
             this.making_choice = true;
         }
-         
-        let convo = villager_convos[key + talk_type];
+
+        if (this.task_list[name] !== undefined) {
+            key = "";
+        }
+
+        let convo = villager_convos[`${key}${talk_type}`];
         this.convo = new Conversation(this.name, name);
         this.convo.setUpWords(convo);
         if (this.making_choice) {
