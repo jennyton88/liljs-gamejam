@@ -142,6 +142,12 @@ function gameRenderPost()
         drawViewArea();
     }
 
+    if (player.in_interact_area) {
+        if (!player.viewing && !player.talking) {
+            drawRect(vec2(player.pos.x - 0.1, player.pos.y + 1.14), vec2(0.4,0.5), new Color(0,0,0,0.5));
+            drawText("?", vec2(player.pos.x - 0.1, player.pos.y + 1.1), 0.5);
+        }
+    }
 }
 
 function drawViewArea() {

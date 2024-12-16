@@ -290,13 +290,6 @@ class Player extends EngineObject {
 
         pos.y += offset_y;
         drawTile(pos, size, this.head[this.dir], color, angle, mirrored);
-
-        if (this.in_interact_area) {
-            if (!this.viewing && !this.talking) {
-                drawRect(vec2(this.pos.x - 0.1, this.pos.y + 1.14), vec2(0.4,0.5), new Color(0,0,0,1));
-                drawText("?", vec2(this.pos.x - 0.1, this.pos.y + 1.1), 0.5);
-            }
-        }
     }
 
 
