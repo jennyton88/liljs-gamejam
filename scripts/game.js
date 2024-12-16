@@ -93,7 +93,7 @@ function gameInit()
     villagers[villager_1.getName()] = villager_1;
     homes[home.getId()] = home;
 
-    player = new Player(vec2(16, 18), vec2(0.85, 0.95), "Not_Bob");
+    player = new Player(vec2(15.6, 16.3), vec2(0.85, 0.95), "Not_Bob");
     player.moveCamera();
 }
 

@@ -18,20 +18,12 @@ class Villager extends Wall {
 
         this.area = new InteractArea(pos, vec2(2.5,2.5), "talking_area");
 
-        this.head = {
-            "up":           tile(43),
-            "up_right":     tile(32),
-            "right":        tile(42),
-            "down_right":   tile(41),
-            "down":         tile(30),
-            "down_left":    tile(41),
-            "left":         tile(42),
-            "up_left":      tile(32),
-        }
+        this.head = new Head(pos, dir);
         this.body = tile(52);
         
         this.dir = dir;
         this.original_dir = this.dir;
+        this.renderOrder = 0;
     }
 
     render(){ 
@@ -42,18 +34,6 @@ class Villager extends Wall {
         let mirrored = false;
 
         drawTile(pos, size, this.body, color, angle, mirrored);
-
-        const offset_y = 0.4;
-
-        if (this.dir == "down_left" 
-            || this.dir == "up_left" 
-            || this.dir == "left") {
-            pos.x -= 0.2;
-            mirrored = true;
-        }
-
-        pos.y += offset_y;
-        drawTile(pos, size, this.head[this.dir], color, angle, mirrored);
     }
 
     getName() {
@@ -62,10 +42,12 @@ class Villager extends Wall {
 
     setOppositeDir(dir) {
         this.dir = opposites[dir];
+        this.head.setDir(this.dir);
     }
 
     setDir(dir) {
         this.dir = dir;
+        this.head.setDir(this.dir);
     }
 
     setTalkType(talk_type) {
