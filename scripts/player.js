@@ -239,12 +239,12 @@ class Player extends EngineObject {
 
     enterArea(obj) {
         if (!obj.locked && this.dir == "up") {
-            this.teleport(vec2(obj.home_pos.x, obj.home_pos.y)); // consider where to start
+            this.teleport(vec2(obj.home_pos.x, obj.home_pos.y));
         }
     }
 
     leaveArea() {
-        if (this.in_house_id !== -1 && this.dir == "down") { // raycast still facing house when leaving it, just need to face up for now
+        if (this.in_house_id !== -1 && this.dir == "down") {
             this.teleport(homes[this.in_house_id].door_area.pos);
             this.in_house_id = -1;
         }
@@ -269,11 +269,15 @@ class Player extends EngineObject {
             let key = `${name}_${talk}`;
 
             if (villager_convos[key] == undefined) { // reset loop
-                
-                if (this.task_list[name] == undefined && villagers[name].task !== "" && !villagers[name].task_completed) {
+                if (this.task_list[name] !== "complete" 
+                    && this.task_list[name] == undefined 
+                    && villagers[name].task !== "" 
+                    && !villagers[name].task_completed) {
                     talk_type = villagers[name].task;
                 }
-                else if (this.task_list[name] !== undefined && !villagers[name].task_completed) {
+                else if (this.task_list[name] !== "complete" 
+                    && this.task_list[name] !== undefined 
+                    && !villagers[name].task_completed) {
                     talk_type = `${villagers[name].task}_question`;
                 }
                 else {
@@ -295,18 +299,31 @@ class Player extends EngineObject {
 
         let key = `${name}_`;
 
-        if (this.task_list[name] == undefined && villagers[name].task !== "" && talk_type == villagers[name].task) {
+        if (this.task_list[name] !== "complete" 
+            && this.task_list[name] == undefined 
+            && villagers[name].task !== "" 
+            && talk_type == villagers[name].task) {
             key = "";
             this.making_choice = true;
         }
 
-        if (this.task_list[name] !== undefined) {
+        if (this.task_list[name] !== "complete" 
+            && this.task_list[name] !== undefined) {
             key = "";
+
+            let item_amt = this.items[this.task_list[name]];
+            if (item_amt > 0) {
+                this.items[this.task_list[name]]--;
+                villagers[name].task_completed = true;
+                talk_type = `${villagers[name].task}_success`;
+                this.task_list[name] = "complete";
+            }
         }
 
         let convo = villager_convos[`${key}${talk_type}`];
         this.convo = new Conversation(this.name, name);
         this.convo.setUpWords(convo);
+
         if (this.making_choice) {
             this.convo.setUpChoices(talk_type);
         }
