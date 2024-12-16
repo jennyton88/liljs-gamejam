@@ -53,7 +53,8 @@ function createLevel() {
 
                 if (l == map_offsets.length - 3) {
                     if ("" + rgb == "21,8,130") {
-                        new Tree(vec2(i,j), vec2(0.95, 0.95));
+                        new Tree(vec2(i,j), vec2(0.80, 0.70));
+                        new TreeTop(vec2(i,j));
                         tile_index = tile_type["-1,-1,-1"];
                     }
                 }
