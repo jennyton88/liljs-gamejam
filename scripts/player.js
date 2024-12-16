@@ -1,7 +1,6 @@
 'use strict';
 
 class Player extends EngineObject {
-
     constructor(pos, size=vec2(0.90,0.90), name) {
         super(pos, size);
 
@@ -28,7 +27,10 @@ class Player extends EngineObject {
         this.task_list = {
 
         };
-        this.items = [];
+        this.items = {
+            "tulip": 0,
+            "hat": 0,
+        };
 
         this.head = {
             "up":           tile(7),
@@ -155,6 +157,12 @@ class Player extends EngineObject {
             }
             else {
                 if (data.tile !== 6 && data.tile !== 17)  {
+                    if (item[data.tile] == "tulip") {
+                        this.items["tulip"]++;
+                    }
+                    else if (item[data.tile] == "hat") {
+                        this.items["hat"]++;
+                    }
                     let floor_pos = vec2(Math.floor(pos.x), Math.floor(pos.y));
                     data.tile = undefined;
                     tiles.setData(floor_pos, data, true);
