@@ -9,15 +9,12 @@ let layers = {};
 ///////////////////////////////////////////////////////////////////////////////
 function gameInit()
 {
-    // called once after the engine starts up
-    // setup the game
     setTileFixBleedScale(0.01);
     setCanvasPixelated(true);
     setCanvasFixedSize(vec2(1280, 720));
     setCameraScale(80);
 
     initTileCollision(vec2(255,255));
-
     createLevel();
 
     let random = new RandomGenerator(1);
@@ -25,14 +22,14 @@ function gameInit()
     let home = new Home(0, vec2(20,20), vec2(3,3), "Bob", home_plan, home_plan, home_plan, home_plan, vec2(39.5,41.5));
     let viewing_area = new InteractArea(vec2(20, 3), vec2(2,2), "viewing_area");
 
-    let villager = new Villager(vec2(10,18), vec2(0.90, 0.90), "Bob", "down", "find_item", item[random.int(item.length)]);
+    let villager_0 = new Villager(vec2(10,18), vec2(0.90, 0.90), "Bob", "down", "find_item", item[random.int(item.length)]);
     let villager_1 = new Villager(vec2(18,18), vec2(0.90, 0.90), "Tulip", "down", "find_item", item[random.int(item.length)]);
     let villager_2 = new Villager(vec2(1.5,15.5), vec2(0.90, 0.90), "Gar", "right", "", "");
     let villager_3 = new Villager(vec2(30.5,15.5), vec2(0.90, 0.90), "Bar", "left", "", "");
     let villager_4 = new Villager(vec2(14.5,30.5), vec2(0.90, 0.90), "Mar", "down", "", "");
     let villager_5 = new Villager(vec2(15.6,3.5), vec2(0.90, 0.90), "Sofo", "down", "", "");
 
-    villagers[villager.getName()] = villager;
+    villagers[villager_0.getName()] = villager_0;
     villagers[villager_1.getName()] = villager_1;
     villagers[villager_2.getName()] = villager_2;
     villagers[villager_3.getName()] = villager_3;
@@ -41,7 +38,7 @@ function gameInit()
 
     homes[home.getId()] = home;
 
-    interactables.push(villager, villager_1, home, viewing_area, villager_2, villager_3, villager_4, villager_5);
+    interactables.push(villager_0, villager_1, villager_2, villager_3, villager_4, villager_5, home, viewing_area);
 
     player = new Player(vec2(15.6, 16.3), vec2(0.85, 0.95), "Pixi");
     player.moveCamera();
@@ -59,6 +56,8 @@ function gameUpdate()
     if (player.in_interact_area) {
         player.interact(interactables);
     }
+
+    player.pickUp(layers["plants"]);
 }
 
 ///////////////////////////////////////////////////////////////////////////////

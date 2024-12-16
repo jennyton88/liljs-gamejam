@@ -110,6 +110,60 @@ class Player extends EngineObject {
         return true;
     }
 
+    pickUp(tiles) {
+        if (!this.talking && (keyWasPressed('Enter'))) {
+            let pos = vec2(this.pos.x, this.pos.y);
+            let offset_x = 0;
+            let offset_y = 0;
+    
+            if (this.dir == "up") {
+                offset_y++;
+            }
+            else if (this.dir == "up_right") {
+                offset_y++;
+                offset_x++;
+            }
+            else if (this.dir == "right") {
+                offset_x++;
+            }
+            else if (this.dir == "down_right") {
+                offset_x++;
+                offset_y--;
+            }
+            else if (this.dir == "down") {
+                offset_y--;
+            }
+            else if (this.dir == "down_left") {
+                offset_y--;
+                offset_x--;
+            }
+            else if (this.dir == "left") {
+                offset_x--;
+            }
+            else if (this.dir == "up_left") {
+                offset_x--;
+                offset_y++;
+            }
+    
+            pos.x = pos.x + offset_x;
+            pos.y = pos.y + offset_y;
+    
+            let data = tiles.getData(pos);
+
+            if (data.tile == undefined) {
+                return;
+            }
+            else {
+                if (data.tile !== 6 && data.tile !== 17)  {
+                    let floor_pos = vec2(Math.floor(pos.x), Math.floor(pos.y));
+                    data.tile = undefined;
+                    tiles.setData(floor_pos, data, true);
+                }
+            }
+
+        }
+    }
+
     interact(interactables) {
         if (keyWasPressed('Enter')) {
             const objects = engineObjectsRaycast(this.pos, this.last_dir, interactables);
