@@ -13,7 +13,7 @@ class Head extends EngineObject {
             "left":         tile(42),
             "up_left":      tile(32),
         }
-        this.dir = "down";
+        this.dir = dir;
     }
 
     render() {

@@ -18,11 +18,12 @@ class Villager extends Wall {
 
         this.area = new InteractArea(pos, vec2(2.5,2.5), "talking_area");
 
-        this.head = new Head(pos, dir);
-        this.body = tile(52);
-        
         this.dir = dir;
         this.original_dir = this.dir;
+
+        this.head = new Head(pos, this.dir);
+        this.body = tile(52);
+        
         this.renderOrder = 0;
     }
 
