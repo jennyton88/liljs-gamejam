@@ -207,7 +207,8 @@ class Player extends EngineObject {
             let key = name + "_" + talk;
 
             if (villager_convos[key] == undefined) { // reset loop
-                if (!villagers[name].task_completed) {
+                
+                if (villagers[name].task !== "" && !villagers[name].task_completed) {
                     talk_type = villagers[name].task;
                 }
                 else {
@@ -229,11 +230,11 @@ class Player extends EngineObject {
 
         let key = name + "_";
 
-        if (talk_type == villagers[name].task) {
+        if (villagers[name].task !== "" && talk_type == villagers[name].task) {
             key = "";
             this.making_choice = true;
         }
-
+         
         let convo = villager_convos[key + talk_type];
         this.convo = new Conversation(this.name, name);
         this.convo.setUpWords(convo);
