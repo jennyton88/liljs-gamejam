@@ -9,7 +9,7 @@ let layers = {};
 ///////////////////////////////////////////////////////////////////////////////
 function gameInit()
 {
-    setTileFixBleedScale(0.01);
+    setTileFixBleedScale(0.1);
     setCanvasPixelated(true);
     setCanvasFixedSize(vec2(1280, 720));
     setCameraScale(80);
