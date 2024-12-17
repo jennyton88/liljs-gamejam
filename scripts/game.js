@@ -41,8 +41,8 @@ function gameInit()
     let home = new Home(0, vec2(20,20), vec2(3,3), "Bob", -1, bob_home, vec2(39.5,41.5));
     let viewing_area = new InteractArea(vec2(20, 3), vec2(2,2), "viewing_area");
 
-    let villager_0 = new Villager(vec2(10,18), vec2(0.90, 0.90), "Bob", "down", "lost_item", item[53]);
-    let villager_1 = new Villager(vec2(18,18), vec2(0.90, 0.90), "Tulip", "down", "find_item", item[16]);
+    let villager_0 = new Villager(vec2(10,18), vec2(0.90, 0.90), "Bob", "down", "lost_item", "hat");
+    let villager_1 = new Villager(vec2(18,18), vec2(0.90, 0.90), "Tulip", "down", "find_item", "tulip");
     let villager_2 = new Villager(vec2(1.5,15.5), vec2(0.90, 0.90), "Gar", "right", "", "");
     let villager_3 = new Villager(vec2(30.5,15.5), vec2(0.90, 0.90), "Bar", "left", "", "");
     let villager_4 = new Villager(vec2(14.5,30.5), vec2(0.90, 0.90), "Mar", "down", "", "");

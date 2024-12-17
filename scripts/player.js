@@ -162,10 +162,10 @@ class Player extends EngineObject {
             }
             else {
                 if (data.tile !== 6 && data.tile !== 17)  {
-                    if (item[data.tile] == "tulip") {
+                    if (data.tile == item["tulip"]) {
                         this.items["tulip"]++;
                     }
-                    else if (item[data.tile] == "hat") {
+                    else if (data.tile == item["hat"]) {
                         this.items["hat"]++;
                     }
                     let floor_pos = vec2(Math.floor(pos.x), Math.floor(pos.y));
