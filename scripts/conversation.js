@@ -66,11 +66,12 @@ class Conversation {
         drawText(choices[0], vec2(choice_pos.x, choice_pos.y + offset), 0.4, new Color(1,1,1,1), 0, new Color(1,1,1,1), 'center');
         drawText(choices[1], choice_pos, 0.4, new Color(1,1,1,1), 0, new Color(1,1,1,1), 'center');
 
+        let size = vec2(0.2,0.2);
         if (this.choice == 0) {
-            drawRect(vec2(choice_pos.x, choice_pos.y + offset));
+            drawRect(vec2(choice_pos.x - 1.5, choice_pos.y + offset), size);
         }
         else if (this.choice == 1) {
-            drawRect(vec2(choice_pos.x, choice_pos.y));
+            drawRect(vec2(choice_pos.x - 1.5, choice_pos.y), size);
         }
     }
 
@@ -109,6 +110,8 @@ class Conversation {
 
     displayResult() {
         this.curr_line = this.results[this.choice];
+        this.curr_line = this.curr_line.replace("{name}", this.player_name);
+        this.curr_line = this.curr_line.replace("{item}", villagers[this.villager_name].task_item);
     }
 
     destroy() {
