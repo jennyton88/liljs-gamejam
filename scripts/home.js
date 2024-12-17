@@ -1,21 +1,23 @@
 'use strict';
 
 class Home extends Wall {
-    constructor(id, pos, size, owner, furniture_data, floor_plan, outside_floor_plan, exterior, home_pos) {
+    constructor(id, pos, size, owner, furniture_data, home_data, home_pos) {
         super(pos, size, "home");
         this.id = id;
         this.owner = owner;
         this.locked = false;
         this.furniture_data = furniture_data;
-        this.floor_plan = floor_plan;
-        this.outside_floor_plan = outside_floor_plan;
-        this.exterior = exterior;
+        this.home_data = home_data;
         this.home_pos = home_pos;
-        this.leave_pos = vec2(pos.x, pos.y - 2);
         this.type = "home";
         this.door_area = new InteractArea(vec2(pos.x, pos.y - 2), vec2(1,1), "entering_area");
         this.home_area = new InteractArea(home_pos, vec2(1,1), "leaving_area");
-        this.buildHome(this.floor_plan);
+        this.buildHome();
+        this.home_front = [
+            tile(61), tile(62), tile(63),
+            tile(72), tile(73), tile(74),
+            tile(83), tile(84), tile(85),
+        ];
     }
 
     unlockHome() {
@@ -37,18 +39,15 @@ class Home extends Wall {
         let pos1 = vec2(18,20);
         let tile_layer = new TileLayer(pos1, vec2(house_pos.x + pos1.x, house_pos.y + pos1.y));
 
-        for (let i = 0; i < this.floor_plan.length; i++) {
-            for (let j = 0; j < this.floor_plan.length; j++) {
-                let mirrored = false;
-                if (this.floor_plan[i][j] % 2 == 0) {
-                    mirrored = true;
+        for (let i = 0; i < this.home_data.plan.length; i++) {
+            for (let j = 0; j < this.home_data.plan.length; j++) {
+                if (this.home_data.plan[i][j] !== 1) {
+                    let wall_pos = vec2(-2+this.pos.x+ pos1.x + pos.x,this.pos.y+ pos1.y+ pos.y);
+                    setTileCollisionData(wall_pos, 1); // position of object house included
                 }
 
-                if (this.floor_plan[i][j] !== 1) {
-                    setTileCollisionData(vec2(-2+this.pos.x+ pos1.x + pos.x,this.pos.y+ pos1.y+ pos.y), 1) // position of object house included
-                }
-
-                let data = new TileLayerData(tiled[this.floor_plan[i][j]], 0, mirrored);
+                let mirrored = this.home_data.mirrored[i][j];
+                let data = new TileLayerData(tiled[this.home_data.plan[i][j]], 0, mirrored);
                 tile_layer.setData(vec2(pos.x,pos.y),data);
 
                 pos.y++;
@@ -58,5 +57,23 @@ class Home extends Wall {
         }
 
         tile_layer.redraw();
+    }
+
+    render() {
+        let counter = 3;
+        let size = vec2(1,1);
+        let pos = vec2(this.pos.x, this.pos.y);
+        let offset_x = -1;
+        let offset_y = 1;
+
+        for (let i = 0; i < 9; i++) {
+            drawTile(vec2(pos.x + offset_x,pos.y + offset_y), size, this.home_front[i]);
+            offset_x++;
+            if (i ==  counter - 1) {
+                offset_y--;
+                offset_x = -1;
+                counter += 3;
+            }
+        }
     }
 }

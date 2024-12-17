@@ -17,8 +17,28 @@ function gameInit()
     initTileCollision(vec2(255,255));
     createLevel();
 
+    const bob_home = {
+        plan: [
+            [7,3,3,3,3,3,11],
+            [19,1,1,1,1,1,5],
+            [13,1,1,1,1,1,5],
+            [15,1,1,1,1,1,5],
+            [17,1,1,1,1,1,5],
+            [19,1,1,1,1,1,5],
+            [7,3,3,3,3,3,11],
+        ],
+        mirrored: [
+            [0,0,0,0,0,0,0],
+            [0,0,0,0,0,0,0],
+            [0,0,0,0,0,0,0],
+            [0,0,0,0,0,0,0],
+            [0,0,0,0,0,0,0],
+            [0,0,0,0,0,0,0],
+            [1,1,1,1,1,1,1], 
+        ],
+    };
 
-    let home = new Home(0, vec2(20,20), vec2(3,3), "Bob", home_plan, home_plan, home_plan, home_plan, vec2(39.5,41.5));
+    let home = new Home(0, vec2(20,20), vec2(3,3), "Bob", -1, bob_home, vec2(39.5,41.5));
     let viewing_area = new InteractArea(vec2(20, 3), vec2(2,2), "viewing_area");
 
     let villager_0 = new Villager(vec2(10,18), vec2(0.90, 0.90), "Bob", "down", "lost_item", item[53]);
@@ -107,7 +127,7 @@ function drawViewArea() {
     let offset_y = 1;
 
     let color = new Color();
-    color.setHex("#000000")
+    color.setHex("#000000");
 
     drawRect(vec2(cameraPos.x, cameraPos.y), vec2(20,20), color);
     
