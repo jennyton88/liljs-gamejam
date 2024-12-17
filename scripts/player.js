@@ -345,8 +345,8 @@ class Player extends EngineObject {
 
 
         if (this.in_house_id == -1) {
-            if (this.pos.x > 24) {
-                x = 24;
+            if (this.pos.x > 24.1) {
+                x = 24.1;
             }
             else if (this.pos.x < 8) {
                 x = 8;
