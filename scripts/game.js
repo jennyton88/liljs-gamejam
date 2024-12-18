@@ -6,6 +6,13 @@ let villagers = {};
 let homes = {};
 let layers = {};
 
+const tulip_medal_0 = new Medal(0, "Gift of Tulip", "You gave Tulip a tulip!");
+const tulip_medal_1 = new Medal(1, "Tulip Massacre", "You picked up every tulip you can reach!");
+const tulip_medal_2 = new Medal(2, "How Rude!", "You picked the tulip that has been here for ages!");
+const hat_medal = new Medal(2, "Lost and Found Hat", "You found Bob's hat. Merry Void Day!");
+const talker_medal = new Medal(3, "Quite the Talker", "Talk to everyone in town!");
+medalsInit("void_town");
+
 ///////////////////////////////////////////////////////////////////////////////
 function gameInit()
 {
@@ -19,15 +26,15 @@ function gameInit()
 
     const bob_home = {
         house_keys: {
-            "sw": 14,
-            "tw": 4,
-            "bw": 5,
-            "bc": 25,
-            "tc": 3,
-            "ld": 26,
-            "d": 27,
-            "rd": 28,
-            "f": 15,
+            "sw":   14,
+            "tw":   4,
+            "bw":   5,
+            "bc":   25,
+            "tc":   3,
+            "ld":   26,
+            "d":    27,
+            "rd":   28,
+            "f":    15,
         },
         plan: [
             ['bc','sw','sw','sw','sw','sw','tc'],
@@ -49,7 +56,7 @@ function gameInit()
         ],
     };
 
-    let home = new Home(0, vec2(20,20), vec2(3,3), "Bob", -1, bob_home, vec2(39.5,41.5));
+    let home = new Home(0, vec2(20,20), vec2(3,3), "Bob", bob_home, vec2(39.5,41.5));
     let viewing_area = new InteractArea(vec2(20, 3), vec2(2,2), "viewing_area");
 
     let villager_0 = new Villager(vec2(10,18), vec2(0.90, 0.90), "Bob", "down", "lost_item", "hat");
@@ -126,6 +133,11 @@ function drawViewArea() {
         80, 81, 82
     ];
 
+    if (tulip_medal_1.unlocked) {
+        view_area[2] = 64;
+        view_area[5] = 75;
+    }
+
     setCameraScale(220);
     let counter = 3;
     let size = vec2(1,1);
@@ -149,21 +161,21 @@ function drawViewArea() {
 
 function createLevel() {
     const tile_type = {
-        "9999" : 9, // unknown
-        "6,85,0": 13, // lilypads
-        "255,94,26": 12, // flowers
-        "77,166,255": 31, // water
-        "143,222,93": 8, // grass
-        "241,249,3": 21, // sand
-        "255,181,112": 20, //path
+        "9999" :        9, // unknown
+        "6,85,0":       13, // lilypads
+        "255,94,26":    12, // flowers
+        "77,166,255":   31, // water
+        "143,222,93":   8, // grass
+        "241,249,3":    21, // sand
+        "255,181,112":  20, //path
         // "21,8,130": , // trees,
-        "50,41,71": 11, //side walls
-        "255,0,68": 0, // top corners
-        "0,153,219": 2,// top wall
-        "246,117,122": 1, // top angle wall
-        "194,133,105": 22,// wall ends
-        "40,25,40": 53,//hat
-        "-1,-1,-1": 6,
+        "50,41,71":     11, //side walls
+        "255,0,68":     0, // top corners
+        "0,153,219":    2, // top wall
+        "246,117,122":  1,  // top angle wall
+        "194,133,105":  22, // wall ends
+        "40,25,40":     53, // hat
+        "-1,-1,-1":     6, // transparent
     };
 
     // 1 is mirrored / 0 is not

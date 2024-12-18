@@ -63,6 +63,10 @@ class Villager extends Wall {
     completeTask(){
         if (this.task_item == "hat") {
             this.head.setHat();
+            hat_medal.unlock();
+        }
+        else if (this.task_item == "tulip") {
+            tulip_medal_0.unlock();
         }
     }
 }

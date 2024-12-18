@@ -20,13 +20,9 @@ class Player extends EngineObject {
 
         this.viewing = false;
 
-        this.talked_with = {
-        };
-        this.met = {
-        };
-        this.task_list = {
-
-        };
+        this.talked_with = {};
+        this.met = {};
+        this.task_list = {};
         this.items = {
             "tulip": 0,
             "hat": 0,
@@ -162,13 +158,21 @@ class Player extends EngineObject {
             }
             else {
                 if (data.tile !== 6 && data.tile !== 17)  {
+                    let floor_pos = vec2(Math.floor(pos.x), Math.floor(pos.y));
+
                     if (data.tile == item["tulip"]) {
                         this.items["tulip"]++;
+                        if (floor_pos.x == 2 && floor_pos.y == 15) {
+                            tulip_medal_2.unlock();
+                        }
+                        if (this.items["tulip"] == 16) {
+                            tulip_medal_1.unlock();
+                        }
                     }
                     else if (data.tile == item["hat"]) {
                         this.items["hat"]++;
                     }
-                    let floor_pos = vec2(Math.floor(pos.x), Math.floor(pos.y));
+
                     data.tile = undefined;
                     tiles.setData(floor_pos, data, true);
                 }
@@ -320,6 +324,21 @@ class Player extends EngineObject {
                 talk_type = `${villagers[name].task}_success`;
                 this.task_list[name] = "complete";
                 villagers[name].completeTask();
+            }
+        }
+
+        if (name ==  "Gar" && tulip_medal_2.unlocked) {
+            key = `${name}_`;
+            talk_type = "tulip";
+        }
+
+        if (tulip_medal_1.unlocked) {
+            key = "";
+            talk_type = "tulip";
+
+            if (name == "Gar" && tulip_medal_2.unlocked) {
+                key = `${name}_`;
+                talk_type = "sad_tulip";
             }
         }
 

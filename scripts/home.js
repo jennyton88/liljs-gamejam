@@ -6,7 +6,6 @@ class Home extends Wall {
         this.id = id;
         this.owner = owner;
         this.locked = false;
-        this.furniture_data = furniture_data;
         this.home_data = home_data;
         this.home_pos = home_pos;
         this.type = "home";
