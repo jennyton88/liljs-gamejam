@@ -1,5 +1,32 @@
 'use strict';
 
+const opposites = {
+    "up":           "down",
+    "down":         "up",
+    "left":         "right",
+    "right":        "left",
+    "down_left":    "up_right",
+    "up_right" :    "down_left",
+    "down_right":   "up_left",
+    "up_left":      "down_right",
+};
+
+const dir = {
+    "up":           0,
+    "up_right":     1,
+    "right":        2,
+    "down_right":   3,
+    "down":         4,
+    "down_left":    5,
+    "left":         6,
+    "up_left":      7,
+}
+
+const item = {
+    "tulip":    12,
+    "hat":      53,
+}
+
 let player;
 let interactables = [];
 let villagers = {};
@@ -10,8 +37,8 @@ const tulip_medal_0 = new Medal(0, "Gift of Tulip", "You gave Tulip a tulip!");
 const tulip_medal_1 = new Medal(1, "Tulip Massacre", "You picked up every tulip you can reach!");
 const tulip_medal_2 = new Medal(2, "How Rude!", "You picked the tulip that has been here for ages!");
 const hat_medal = new Medal(2, "Lost and Found Hat", "You found Bob's hat. Merry Void Day!");
-const talker_medal = new Medal(3, "Quite the Talker", "Talk to everyone in town!");
-medalsInit("void_town");
+const talker_medal = new Medal(3, "Quite the Talker", "Talk to everyone in the village!");
+medalsInit("void_village");
 
 ///////////////////////////////////////////////////////////////////////////////
 function gameInit()

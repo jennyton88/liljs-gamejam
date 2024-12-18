@@ -22,6 +22,7 @@ class Player extends EngineObject {
 
         this.talked_with = {};
         this.met = {};
+        this.dialogue_complete = {};
         this.task_list = {};
         this.items = {
             "tulip": 0,
@@ -289,6 +290,19 @@ class Player extends EngineObject {
                 else {
                     talk_type = 0;
                     talk = 0;
+                }
+
+                this.dialogue_complete[name] = true;
+
+                if (!talker_medal.unlocked) {
+                    const total_villagers = 6;
+                    let talk_counter = 0;
+                    for (const[key, name] of Object.entries(this.dialogue_complete)) {
+                        talk_counter++;
+                    }
+                    if (talk_counter == total_villagers) {
+                        talker_medal.unlock();
+                    }
                 }
             }
             else {
