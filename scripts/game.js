@@ -40,6 +40,10 @@ const hat_medal = new Medal(2, "Lost and Found Hat", "You found Bob's hat. Merry
 const talker_medal = new Medal(3, "Quite the Talker", "Talk to everyone in the village!");
 medalsInit("void_village");
 
+const pickup_sound = new Sound([.3,,523,.01,.04,.09,,1.7,-5,,150,.05,.02,,,,,.61,.05,,416]);
+const talk_sound_0 = new Sound([.8,.2,135,,.09,.003,,3.1,6.5,5,186,.12,.06,,4,,.01,.92,.1]);
+const talk_sound_1 = new Sound([.4,.8,225,,.09,.003,,3.1,6.5,5.7,-1400,.12,.06,,4,,.01,.92,.1,.22]);
+
 ///////////////////////////////////////////////////////////////////////////////
 function gameInit()
 {

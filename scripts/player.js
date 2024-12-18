@@ -176,6 +176,8 @@ class Player extends EngineObject {
 
                     data.tile = undefined;
                     tiles.setData(floor_pos, data, true);
+
+                    pickup_sound.play();
                 }
             }
 
@@ -354,6 +356,7 @@ class Player extends EngineObject {
                 key = `${name}_`;
                 talk_type = "sad_tulip";
             }
+            this.making_choice = false;
         }
 
         let convo = villager_convos[`${key}${talk_type}`];
@@ -367,6 +370,8 @@ class Player extends EngineObject {
         if (talk_type == "intro") { talk_type = 0; }
 
         villagers[name].setTalkType(talk_type);
+
+        talk_sound_1.play();
     }
 
     moveCamera() {
