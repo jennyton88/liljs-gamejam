@@ -1,7 +1,7 @@
 'use strict';
 
 class Home extends Wall {
-    constructor(id, pos, size, owner, furniture_data, home_data, home_pos) {
+    constructor(id, pos, size, owner, home_data, home_pos) {
         super(pos, size, "home");
         this.id = id;
         this.owner = owner;
@@ -41,13 +41,13 @@ class Home extends Wall {
 
         for (let i = 0; i < this.home_data.plan.length; i++) {
             for (let j = 0; j < this.home_data.plan.length; j++) {
-                if (this.home_data.plan[i][j] !== 1) {
+                if (this.home_data.plan[i][j] !== "f") {
                     let wall_pos = vec2(-2+this.pos.x+ pos1.x + pos.x,this.pos.y+ pos1.y+ pos.y);
                     setTileCollisionData(wall_pos, 1); // position of object house included
                 }
 
                 let mirrored = this.home_data.mirrored[i][j];
-                let data = new TileLayerData(tiled[this.home_data.plan[i][j]], 0, mirrored);
+                let data = new TileLayerData(this.home_data.house_keys[this.home_data.plan[i][j]], 0, mirrored);
                 tile_layer.setData(vec2(pos.x,pos.y),data);
 
                 pos.y++;
