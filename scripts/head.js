@@ -4,14 +4,14 @@ class Head extends EngineObject {
         this.renderOrder = 1;
 
         this.head = {
-            "up":           tile(43),
-            "up_right":     tile(32),
-            "right":        tile(42),
-            "down_right":   tile(41),
-            "down":         tile(30),
-            "down_left":    tile(41),
-            "left":         tile(42),
-            "up_left":      tile(32),
+            "up":           [tile(43), tile(43)],
+            "up_right":     [tile(32), tile(54)],
+            "right":        [tile(42), tile(76)],
+            "down_right":   [tile(41), tile(87)],
+            "down":         [tile(30), tile(65)],
+            "down_left":    [tile(41), tile(87)],
+            "left":         [tile(42), tile(76)],
+            "up_left":      [tile(32), tile(54)],
         }
         this.dir = dir;
 
@@ -36,7 +36,8 @@ class Head extends EngineObject {
         }
 
         pos.y += offset_y;
-        drawTile(pos, size, this.head[this.dir], color, angle, mirrored);
+        const head_dir = tulip_medal_1.unlocked? this.head[this.dir][1]: this.head[this.dir][0];
+        drawTile(pos, size, head_dir, color, angle, mirrored);
 
         if (this.have_hat) {
             drawTile(vec2(pos.x, pos.y+0.5), size, this.hat, color, angle, mirrored);

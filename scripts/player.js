@@ -166,7 +166,7 @@ class Player extends EngineObject {
                         if (floor_pos.x == 2 && floor_pos.y == 15) {
                             tulip_medal_2.unlock();
                         }
-                        if (this.items["tulip"] == 16) {
+                        if (this.items["tulip"] == 16 || (tulip_medal_0.unlocked && this.items["tulip"] == 15)) {
                             tulip_medal_1.unlock();
                         }
                     }
