@@ -37,11 +37,18 @@ class Home extends Wall {
         let pos = vec2();
         let pos1 = vec2(18,20);
         let tile_layer = new TileLayer(pos1, vec2(house_pos.x + pos1.x, house_pos.y + pos1.y));
+        let furniture_layer = new TileLayer(pos1, vec2(house_pos.x + pos1.x, house_pos.y + pos1.y));
+        
+        const furnish = this.home_data.furniture;
+        const data = new TileLayerData(furnish.sprite, 0, false);
+        furniture_layer.setData(vec2(furnish.pos.x,furnish.pos.y), data); // only one furniture in this case
+        const fur_pos = vec2(-2 + this.pos.x + pos1.x + furnish.pos.x, this.pos.y + pos1.y + furnish.pos.y);
+        setTileCollisionData(fur_pos, 1);
 
         for (let i = 0; i < this.home_data.plan.length; i++) {
             for (let j = 0; j < this.home_data.plan.length; j++) {
                 if (this.home_data.plan[i][j] !== "f") {
-                    let wall_pos = vec2(-2+this.pos.x+ pos1.x + pos.x,this.pos.y+ pos1.y+ pos.y);
+                    let wall_pos = vec2(-2 + this.pos.x + pos1.x + pos.x,this.pos.y + pos1.y + pos.y);
                     setTileCollisionData(wall_pos, 1); // position of object house included
                 }
 
@@ -56,6 +63,7 @@ class Home extends Wall {
         }
 
         tile_layer.redraw();
+        furniture_layer.redraw();
     }
 
     render() {

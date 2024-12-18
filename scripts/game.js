@@ -48,7 +48,7 @@ function gameInit()
     setCanvasFixedSize(vec2(1280, 720));
     setCameraScale(80);
 
-    initTileCollision(vec2(255,255));
+    initTileCollision(vec2(50,50));
     createLevel();
 
     const bob_home = {
@@ -63,6 +63,7 @@ function gameInit()
             "rd":   28,
             "f":    15,
         },
+        furniture: {pos: vec2(3,4), sprite: 16},
         plan: [
             ['bc','sw','sw','sw','sw','sw','tc'],
             ['bw','f','f','f','f','f','tw'],
@@ -104,7 +105,7 @@ function gameInit()
 
     interactables.push(villager_0, villager_1, villager_2, villager_3, villager_4, villager_5, home, viewing_area);
 
-    player = new Player(vec2(15.6, 16.3), vec2(0.85, 0.95), "Pixi");
+    player = new Player(vec2(15.6, 16.3), vec2(0.85, 0.93), "Pixi");
     player.moveCamera();
 }
 

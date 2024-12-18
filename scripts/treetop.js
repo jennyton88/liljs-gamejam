@@ -20,7 +20,7 @@ class TreeTop extends EngineObject {
         let mirrored = false;
 
         let offset_x = -1;
-        let offset_y = 2;
+        let offset_y = 1.9;
         let counter = 3;
         let index = 0;
         for (let i = 0; i < 2; i++) {
