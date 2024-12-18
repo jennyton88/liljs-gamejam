@@ -15,7 +15,7 @@ class TreeTop extends EngineObject {
     render() {
         let pos = vec2(this.pos.x, this.pos.y);
         const size = vec2(1, 1);
-        const color = new Color(1,1,1,1);
+        const color = WHITE;
         const angle = 0;
         let mirrored = false;
 

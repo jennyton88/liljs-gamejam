@@ -1,6 +1,5 @@
 'use strict';
 
-
 class Conversation {
     constructor(player_name, villager_name) {
         this.player_name = player_name;
@@ -8,7 +7,6 @@ class Conversation {
         this.lines = [];
         this.choices = [];
         this.curr_line = "";
-        this.prev_line = "";
         this.counter = 0;
         this.choice = 0;
         this.results = [];
@@ -29,7 +27,6 @@ class Conversation {
         this.lines = new_convo;
 
         this.curr_line = this.lines[this.counter];
-        this.prev_line = this.curr_line;
     }
 
     setUpChoices(talk_type) {
@@ -47,32 +44,31 @@ class Conversation {
     }
 
     displayText() {
-        drawRect(vec2(cameraPos.x, cameraPos.y - 3), vec2(10,2), new Color(0,0,0,1));
+        drawRect(vec2(cameraPos.x, cameraPos.y - 3), vec2(10,2), BLACK);
 
         drawText(this.villager_name, vec2(cameraPos.x - 4.3, cameraPos.y - 2.35), 0.6);
-        drawText(this.curr_line, vec2(cameraPos.x, cameraPos.y - 3), 0.4, new Color(1,1,1,1), 0, new Color(1,1,1,1), 'center');
+        drawText(this.curr_line, vec2(cameraPos.x, cameraPos.y - 3), 0.4, WHITE, 0, WHITE, 'center');
     }
 
 
     displayChoices() {
-        let choices = this.choices;
-
         let choice_pos = vec2(cameraPos.x + 3, cameraPos.y);
         let offset = 1;
 
-        drawText(this.curr_line, vec2(cameraPos.x, cameraPos.y - 3), 0.4, new Color(1,1,1,1), 0, new Color(1,1,1,1), 'center');
-        drawRect(vec2(cameraPos.x + 3, cameraPos.y + 1), vec2(3.2,1), new Color(0,0,0,1));
-        drawRect(vec2(cameraPos.x + 3, cameraPos.y), vec2(3.2,1), new Color(0,0,0,1));
-        drawText(choices[0], vec2(choice_pos.x, choice_pos.y + offset), 0.4, new Color(1,1,1,1), 0, new Color(1,1,1,1), 'center');
-        drawText(choices[1], choice_pos, 0.4, new Color(1,1,1,1), 0, new Color(1,1,1,1), 'center');
+        let black = BLACK;
+        let white = WHITE;
+
+        drawRect(vec2(cameraPos.x + 3, cameraPos.y + offset), vec2(3.2,1), black);
+        drawRect(vec2(cameraPos.x + 3, cameraPos.y), vec2(3.2,1), black);
+        drawText(this.choices[0], vec2(choice_pos.x, choice_pos.y + offset), 0.4, white, 0, white, 'center');
+        drawText(this.choices[1], choice_pos, 0.4, white, 0, white, 'center');
+
+        drawText(this.curr_line, vec2(cameraPos.x, cameraPos.y - 3), 0.4, white, 0, white, 'center');
 
         let size = vec2(0.2,0.2);
-        if (this.choice == 0) {
-            drawRect(vec2(choice_pos.x - 1.5, choice_pos.y + offset), size);
-        }
-        else if (this.choice == 1) {
-            drawRect(vec2(choice_pos.x - 1.5, choice_pos.y), size);
-        }
+        offset = this.choice == 0? 1 : 0;
+
+        drawRect(vec2(choice_pos.x - 1.5, choice_pos.y + offset), size);
     }
 
     moveChoice(num) {
@@ -87,8 +83,6 @@ class Conversation {
     }
 
     moveText() {
-        this.prev_line = this.curr_line;
-
         this.counter++;
         if (this.counter == this.lines.length) {
             this.counter = 0;  

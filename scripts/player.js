@@ -196,9 +196,6 @@ class Player extends EngineObject {
                         if (choice == 0) {
                             this.task_list[obj.name] = obj.task_item;
                         }
-                        // else if (choice == 1) {
-                        //     this.task_list[obj.name] = "no";
-                        // }
                     }
                     else if (this.talking) {
                         if (!this.convo.moveText()) { // finished their dialogue loop
@@ -366,7 +363,7 @@ class Player extends EngineObject {
     render(){ 
         let pos = vec2(this.pos.x, this.pos.y);
         const size = vec2(0.95, 0.95);
-        const color = new Color(1,1,1,1);
+        const color = WHITE;
         const angle = 0;
         let mirrored = false;
 
@@ -384,6 +381,4 @@ class Player extends EngineObject {
         pos.y += offset_y;
         drawTile(pos, size, this.head[this.dir], color, angle, mirrored);
     }
-
-
 }

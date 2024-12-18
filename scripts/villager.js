@@ -30,7 +30,7 @@ class Villager extends Wall {
     render(){ 
         let pos = vec2(this.pos.x, this.pos.y);
         const size = vec2(0.95, 0.95);
-        const color = new Color(1,1,1,1);
+        const color = WHITE;
         const angle = 0;
         let mirrored = false;
 
