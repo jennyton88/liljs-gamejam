@@ -203,6 +203,8 @@ class Player extends EngineObject {
                         if (choice == 0) {
                             this.task_list[obj.name] = obj.task_item;
                         }
+                        
+                        talk_sound_0.play();
                     }
                     else if (this.talking) {
                         if (!this.convo.moveText()) { // finished their dialogue loop
@@ -371,7 +373,7 @@ class Player extends EngineObject {
 
         villagers[name].setTalkType(talk_type);
 
-        talk_sound_1.play();
+        talk_sound_0.play();
     }
 
     moveCamera() {

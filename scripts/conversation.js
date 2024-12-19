@@ -91,7 +91,6 @@ class Conversation {
 
         this.curr_line = this.lines[this.counter];
         talk_sound_0.play();
-        talk_sound_1.play();
         return true;
     }
 
