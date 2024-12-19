@@ -54,7 +54,6 @@ class Player extends EngineObject {
             speed = 0.2;
         }
 
-
         if (keyIsDown('ArrowUp')) {
             vy = speed;
             this.dir = "up";
@@ -163,11 +162,15 @@ class Player extends EngineObject {
 
                     if (data.tile == item["tulip"]) {
                         this.items["tulip"]++;
-                        if (floor_pos.x == 2 && floor_pos.y == 15) {
-                            tulip_medal_2.unlock();
+                        if (!tulip_medal_2.unlocked) {
+                            if (floor_pos.x == 2 && floor_pos.y == 15) {
+                                tulip_medal_2.unlock();
+                            }
                         }
-                        if (this.items["tulip"] == 16 || (tulip_medal_0.unlocked && this.items["tulip"] == 15)) {
-                            tulip_medal_1.unlock();
+                        if (!tulip_medal_1.unlocked) {
+                            if (this.items["tulip"] == 16 || (tulip_medal_0.unlocked && this.items["tulip"] == 15)) {
+                                tulip_medal_1.unlock();
+                            }
                         }
                     }
                     else if (data.tile == item["hat"]) {
@@ -203,7 +206,7 @@ class Player extends EngineObject {
                         if (choice == 0) {
                             this.task_list[obj.name] = obj.task_item;
                         }
-                        
+
                         talk_sound_0.play();
                     }
                     else if (this.talking) {
@@ -212,6 +215,24 @@ class Player extends EngineObject {
                             this.convo = this.convo.destroy();
                             this.convo = "";
                             this.talking = false;
+
+                            if (!talker_medal.unlocked) {
+                                let talk = this.talked_with[obj.name] + 1;
+                                let key = `${obj.name}_${talk}`;
+
+                                if (villager_convos[key] == undefined) {
+                                    this.dialogue_complete[obj.name] = true;
+                                }
+
+                                const total_villagers = 6;
+                                let talk_counter = 0;
+                                for (const[key, name] of Object.entries(this.dialogue_complete)) {
+                                    talk_counter++;
+                                }
+                                if (talk_counter == total_villagers) {
+                                    talker_medal.unlock();
+                                }
+                            }
                         }
                     }
                 }
@@ -294,19 +315,6 @@ class Player extends EngineObject {
                 else {
                     talk_type = 0;
                     talk = 0;
-                }
-
-                this.dialogue_complete[name] = true;
-
-                if (!talker_medal.unlocked) {
-                    const total_villagers = 6;
-                    let talk_counter = 0;
-                    for (const[key, name] of Object.entries(this.dialogue_complete)) {
-                        talk_counter++;
-                    }
-                    if (talk_counter == total_villagers) {
-                        talker_medal.unlock();
-                    }
                 }
             }
             else {
