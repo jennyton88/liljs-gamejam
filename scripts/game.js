@@ -38,6 +38,7 @@ const tulip_medal_1 = new Medal(1, "Tulip Massacre", "You picked up every tulip 
 const tulip_medal_2 = new Medal(2, "How Rude!", "You picked the tulip that has been here for ages!");
 const hat_medal = new Medal(2, "Lost and Found Hat", "You found Bob's hat. Merry Void Day!");
 const talker_medal = new Medal(3, "Quite the Talker", "Talk to everyone in the village!");
+const house_medal = new Medal(4, "They're All the Same?!", "Enter every house. Bob has some style!");
 medalsInit("void_village");
 
 const pickup_sound = new Sound([.3,,523,.01,.04,.09,,1.7,-5,,150,.05,.02,,,,,.61,.05,,416]);

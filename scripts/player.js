@@ -24,6 +24,7 @@ class Player extends EngineObject {
         this.met = {};
         this.dialogue_complete = {};
         this.task_list = {};
+        this.entered_houses = [];
         this.items = {
             "tulip": 0,
             "hat": 0,
@@ -240,6 +241,14 @@ class Player extends EngineObject {
                 if (this.in_area == "entering_area" && obj.type == "home" && this.dir == "up") {
                     this.enterArea(obj);
                     this.in_house_id = obj.id;
+                    if (!house_medal.unlocked) {
+                        if (!this.entered_houses.includes(this.in_house_id)) {
+                            this.entered_houses.push(this.in_house_id);
+                            if (this.entered_houses.length == 5) {
+                                house_medal.unlock();
+                            }
+                        }
+                    }
                 }
             }
             
