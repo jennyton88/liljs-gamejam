@@ -10,8 +10,8 @@ class Home extends Wall {
         this.home_pos = home_pos;
         this.type = "home";
         this.door_area = new InteractArea(vec2(pos.x, pos.y - 2), vec2(1,1), "entering_area");
-        this.home_area = new InteractArea(home_pos, vec2(1,1), "leaving_area");
-        this.buildHome();
+        this.home_area = new InteractArea(this.home_pos, vec2(1,1), "leaving_area");
+        this.home = new HomeInterior(this.home_pos, this.home_data);
         this.home_front = [
             tile(61), tile(62), tile(63),
             tile(72), tile(73), tile(74),
@@ -30,40 +30,6 @@ class Home extends Wall {
 
     getId() {
         return this.id;
-    }
-
-    buildHome() {
-        const house_pos = vec2(7,7);
-        let pos = vec2();
-        let pos1 = vec2(18,20);
-        let tile_layer = new TileLayer(pos1, vec2(house_pos.x + pos1.x, house_pos.y + pos1.y));
-        let furniture_layer = new TileLayer(pos1, vec2(house_pos.x + pos1.x, house_pos.y + pos1.y));
-        
-        const furnish = this.home_data.furniture;
-        const data = new TileLayerData(furnish.sprite, 0, false);
-        furniture_layer.setData(vec2(furnish.pos.x,furnish.pos.y), data); // only one furniture in this case
-        const fur_pos = vec2(-2 + this.pos.x + pos1.x + furnish.pos.x, this.pos.y + pos1.y + furnish.pos.y);
-        setTileCollisionData(fur_pos, 1);
-
-        for (let i = 0; i < this.home_data.plan.length; i++) {
-            for (let j = 0; j < this.home_data.plan.length; j++) {
-                if (this.home_data.plan[i][j] !== "f") {
-                    let wall_pos = vec2(-2 + this.pos.x + pos1.x + pos.x,this.pos.y + pos1.y + pos.y);
-                    setTileCollisionData(wall_pos, 1); // position of object house included
-                }
-
-                let mirrored = this.home_data.mirrored[i][j];
-                let data = new TileLayerData(this.home_data.house_keys[this.home_data.plan[i][j]], 0, mirrored);
-                tile_layer.setData(vec2(pos.x,pos.y),data);
-
-                pos.y++;
-            }
-            pos.x++;
-            pos.y = 0;
-        }
-
-        tile_layer.redraw();
-        furniture_layer.redraw();
     }
 
     render() {

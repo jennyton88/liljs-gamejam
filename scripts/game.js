@@ -87,7 +87,11 @@ function gameInit()
         ],
     };
 
-    let home = new Home(0, vec2(20,20), vec2(3,3), "Bob", bob_home, vec2(39.5,41.5));
+    let home = new Home(0, vec2(20,20), vec2(3,3), "Bob", bob_home, vec2(0,40));
+    let home_1 = new Home(1, vec2(23,25), vec2(3,3), "Sofo", bob_home, vec2(10,40));
+    let home_2 = new Home(2, vec2(4,20), vec2(3,3), "Bar", bob_home, vec2(20,40));
+    let home_3 = new Home(3, vec2(18,29), vec2(3,3), "Gar", bob_home, vec2(30,40));
+    let home_4 = new Home(4, vec2(12,22), vec2(3,3), "Mar", bob_home, vec2(40,40));
     let viewing_area = new InteractArea(vec2(20, 3), vec2(2,2), "viewing_area");
 
     let villager_0 = new Villager(vec2(10,18), vec2(0.90, 0.90), "Bob", "down", "lost_item", "hat");
@@ -105,8 +109,12 @@ function gameInit()
     villagers[villager_5.getName()] = villager_5;
 
     homes[home.getId()] = home;
+    homes[home_1.getId()] = home_1;
+    homes[home_2.getId()] = home_2;
+    homes[home_3.getId()] = home_3;
+    homes[home_4.getId()] = home_4;
 
-    interactables.push(villager_0, villager_1, villager_2, villager_3, villager_4, villager_5, home, viewing_area);
+    interactables.push(villager_0, villager_1, villager_2, villager_3, villager_4, villager_5, home, home_1, home_2, home_3, home_4, viewing_area);
 
     player = new Player(vec2(15.6, 16.3), vec2(0.85, 0.93), "Pixi");
     player.moveCamera();
