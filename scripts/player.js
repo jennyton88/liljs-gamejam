@@ -16,6 +16,8 @@ class Player extends EngineObject {
         this.convo = "";
         this.making_choice = false;
 
+        this.moving = true;
+
         this.in_house_id = -1;
 
         this.viewing = false;
@@ -47,6 +49,10 @@ class Player extends EngineObject {
     }
 
     move() {
+        if (!this.moving) {
+            return;
+        }
+
         let speed = 0.1;
         let vx = 0;
         let vy = 0;
@@ -108,8 +114,8 @@ class Player extends EngineObject {
         }
 
         this.velocity = vec2(0,0);
-        this.in_interact_area = false;
-        this.in_area = "";
+        // this.in_interact_area = false;
+        // this.in_area = "";
 
         return true;
     }
@@ -258,8 +264,11 @@ class Player extends EngineObject {
 
             if (this.in_area == "viewing_area") {
                 this.viewing = !this.viewing;
+                this.moving = false;
+                this.velocity = vec2(0,0);
                 if (!this.viewing) {
                     setCameraScale(80);
+                    this.moving = true;
                 }
             }
         }
