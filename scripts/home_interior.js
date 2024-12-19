@@ -19,11 +19,27 @@ class HomeInterior extends EngineObject {
         let pos = vec2(this.home_pos.x + offset_x,this.home_pos.y + offset_y);
 
         for (let i = 0; i < this.plan.length; i++) {
+            let counter = 0;
+            let curr_pos = pos.x;
             for (let j = 0; j < this.plan[i].length; j++) {
                 if (this.plan[i][j] !== "f") {
-                    const wall = new Wall(vec2(pos.x, pos.y), vec2(1,1));
-                    wall.tileInfo = tile(6);
-                    this.walls.push(wall);
+                    counter++;
+
+                    if (counter == this.plan[i].length - 1) {
+                        const wall = new Wall(vec2(curr_pos, pos.y - 2), vec2(1, counter));
+                        wall.tileInfo = tile(6);
+                        this.walls.push(wall);
+                    }
+                    else if (j !== this.plan[i].length - 1 && this.plan[i][j + 1] == "f") {
+                        const wall = new Wall(vec2(pos.x, pos.y), vec2(1, 1));
+                        wall.tileInfo = tile(6);
+                        this.walls.push(wall);
+                    }
+                    else if (counter !== this.plan[i].length - 1 && j == this.plan[i].length - 1) {
+                        const wall = new Wall(vec2(pos.x, pos.y), vec2(1, 1));
+                        wall.tileInfo = tile(6);
+                        this.walls.push(wall);
+                    }
                 }
                 if (this.furniture.pos.x == i && this.furniture.pos.y == j) {
                     const wall = new Wall(vec2(pos.x, pos.y), vec2(1,1));
@@ -32,7 +48,6 @@ class HomeInterior extends EngineObject {
                 }
                 pos.y++;
             }
-
             pos.x++;
             pos.y = this.home_pos.y + offset_y;
         }
