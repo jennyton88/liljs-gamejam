@@ -7,7 +7,7 @@ const villager_convos = {
     "Bob_4": ["Come over to my house and have a look around!", "Tulip is standing right next to it.", "I designed it myself.\nIsn't it great?"],
     "Bob_5": ["There's not much around here.", "All I had was a cardboard box!", "Everyone else followed suit.\nMy design is fantastic!"],
 
-    "Tulip_intro": ["Hi! You're the new person huh?", "I'm Tulip.", "You are... {name}, is it?", "Hope you have a good time here!"],
+    "Tulip_intro": ["Hi! You're the new bunny huh?", "I'm Tulip.", "You are... {name}, is it?", "Hope you have a good time here!"],
     "Tulip_0": ["Have you seen the ocean yet?", "I think that it has a great view!", "The void looks great from there."],
     "Tulip_1": ["I like to loiter around Bob's house.", "At least I can pretend I own a house..."],
 
