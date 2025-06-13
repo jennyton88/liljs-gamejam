@@ -1,5 +1,7 @@
 {
   "dependencies": {
-    "littlejsengine": "^1.10.4"
+    "google-closure-compiler": "^20240317.0.0",
+    "littlejsengine": "^1.10.4",
+    "uglify-js": "^3.19.3"
   }
 }
